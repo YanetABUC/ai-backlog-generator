@@ -171,51 +171,50 @@ Dependencies:
 
 ---
 
-### 8. Functional and Non-Functional Requirements Are Present
+### 8. Conciseness, NFRs, and Out of Scope
 
-**What functional requirements are:** Observable system behaviors expressed as "The system must..." statements. They describe *what* the system does, not *how* it does it. Every AC item should be backed by at least one FR.
+**Why this dimension exists:** AI coding assistants treat every sentence in a story as a spec. Redundant sections dilute the signal and waste context. Shape prescription — enumerating return types, result structures, or outcome variants — causes the AI to build exactly that shape, even when a simpler design would work. This dimension checks that the story is lean, does not prescribe implementation, and is explicit about its boundaries.
 
-**What non-functional requirements are:** Measurable constraints on system quality — performance thresholds, security access rules, reliability expectations, auditability specifics, and scalability limits.
-
-**What to check (Functional Requirements):**
-- Is each FR a "The system must..." statement of observable behavior, not an implementation detail?
-- Does each FR correspond to at least one AC item or BDD scenario?
-- Are error and validation behaviors explicitly stated as FRs, not just implied by ACs?
-- Are edge case behaviors captured as FRs?
+**What to check (Conciseness and structure):**
+- Is the story under 150 lines?
+- Is context expressed in a single paragraph — not split into Business Objective, Problem Context, and Desired Outcome sections?
+- Is there no separate Functional Requirements section? Observable behaviors belong in AC.
+- Does any section contain shape prescription: return type enumerations, result object definitions, or function signatures?
 
 **What to check (Non-Functional Requirements):**
-- Is a performance threshold defined with a specific number (response time, concurrency, volume)?
-- Are security access rules stated explicitly — which roles, and what is enforced server-side?
-- Is there a reliability requirement for partial failure or degraded mode?
-- Are auditability requirements specific — what is logged, with which fields?
-- Is scalability defined by a concrete volume or load target?
+- Are NFRs specific to this story — not boilerplate that applies to every story?
+- Does each performance NFR include a specific number (response time, concurrency, volume)?
+- Do security NFRs name specific roles and state what is enforced server-side?
+- Do reliability NFRs describe the specific degraded-mode behavior for this feature?
 
 **What to check (Out of Scope):**
 - Is there an explicit list of what is *not* included in this story?
-- Does it call out Phase 2 or future items that stakeholders might assume are included?
+- Does it name adjacent features or Phase 2 items that stakeholders might assume are in scope?
 
-**Red flags (Functional Requirements):**
-- "The system should work correctly" — not a specific observable behavior
-- FRs that describe implementation ("The system must call the /approve endpoint") — that belongs in a technical spec
-- No FR for an error state that has a BDD Failure Handling scenario
+**Red flags (Conciseness and structure):**
+- Separate Business Objective, Problem Context, and Desired Outcome sections — should be one Context paragraph
+- A Functional Requirements (FR1, FR2...) section — it duplicates AC and risks shape prescription
+- "Return one of: Pre-answer / Block / Resolved" — shape prescription; engineers choose the structure
+- "The system must call the /approve endpoint" — implementation detail in any section
+- Story exceeds 200 lines without justification
 
 **Red flags (Non-Functional Requirements):**
 - "The feature must be fast" — no threshold defined
-- "The feature must be secure" — no specific rule or access control named
-- Performance, security, or reliability omitted entirely — assumed but not committed to
+- "The feature must be secure" — no specific rule or role named
+- NFRs copied verbatim from the template with no values filled in
 
 **Red flags (Out of Scope):**
 - No Out of Scope section — leaves engineering boundaries undefined
 - Out of Scope is empty when stakeholders have mentioned adjacent features during discovery
 
-**Good examples (Functional Requirements):**
-> - FR3: The system must restrict the queue to suggestions matching the manager's assigned location(s); cross-location data must never be accessible
-> - FR5: The system must not create suggestions for SKUs that have no reorder point configured
-
-**Good examples (Non-Functional Requirements):**
+**Good examples (NFRs — specific and story-scoped):**
 > - Performance: The queue must load within 2 seconds for a location with up to 2,000 pending suggestions
 > - Security: Location-based data isolation must be enforced server-side; client-side filtering alone is not sufficient
-> - Auditability: Every suggestion creation event must be logged with: triggering event ID, SKU ID, stock level at time of trigger, reorder point value, and timestamp
+> - Auditability: Every approval action must be logged with user ID, timestamp, and original suggestion values
+
+**Good examples (Out of Scope):**
+> - Bulk approval of multiple suggestions in a single action
+> - Exporting the queue to CSV or Excel from this view
 
 ---
 
@@ -240,8 +239,10 @@ Use this before moving a story to "Ready for Sprint":
 [ ] No undefined external dependencies
 [ ] Definition of Done is explicit
 [ ] An engineer unfamiliar with context could start work without a meeting
-[ ] Each Functional Requirement is a "The system must..." statement of observable behavior — no implementation details
-[ ] Non-Functional Requirements include specific thresholds for performance, security, reliability, and auditability
+[ ] Story is under 150 lines — no redundant narrative sections (no separate Business Objective / Problem Context / Desired Outcome)
+[ ] No Functional Requirements section — observable behaviors are expressed through AC
+[ ] No shape prescription — no return types, result structures, outcome enumerations, or function signatures in any section
+[ ] NFRs are project-specific with measurable thresholds — not boilerplate
 [ ] Out of Scope is explicit — lists what is not included in this story
 ```
 

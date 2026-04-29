@@ -1,6 +1,6 @@
 # Before and After: Story Transformation
 
-This document shows the complete transformation of a poor-quality story into a dev-ready story using the canonical template.
+This document shows the complete transformation of a poor-quality story into a dev-ready story using the canonical lean template.
 
 ---
 
@@ -10,16 +10,13 @@ This document shows the complete transformation of a poor-quality story into a d
 As a user, I want to approve purchase order suggestions so that POs get created.
 ```
 
-**Score:** 9/18 — Requires Rework
+**Score:** 9/24 — Requires Rework
 
 **Issues:**
-- "user" — no role, no context
+- "user" — no role, no context; story doesn't start with "In order to"
 - "so that POs get created" — system action, not a user benefit
-- No Acceptance Criteria
-- No BDD Scenarios
-- No Problem Context or Desired Outcome
-- Contains no Functional or Non-Functional Requirements
-- No Out of Scope defined
+- No Context, no Acceptance Criteria, no Scenarios
+- No NFRs, no Out of Scope
 
 ---
 
@@ -38,53 +35,71 @@ I want to approve a purchase order suggestion in a single action,
 So that a PO document is available for download within seconds — without manual data entry.
 ```
 
-**Why it matters:** The persona tells engineers who can access this feature (preventing privilege bugs). The "In order to" ties it to the business goal. The "So that" sets the UX success bar — the document must be immediately available, meaning the queue must clear after approval.
+**Why it matters:** The "In order to" ties the story to the business goal. The persona tells engineers who can access this feature (preventing privilege bugs). The "So that" sets the UX success bar — the document must be immediately available, meaning the queue must clear after approval.
+
+Add the ownership boundary statement directly after the User Story:
+
+> **Ownership boundary:** This story defines *what behavior* the system must exhibit. Implementation decisions — data structures, return types, function signatures, error handling patterns — are owned by the development team.
 
 ---
 
-### Fix 2: Add Problem Context
+### Fix 2: Replace three sections with one Context paragraph
 
-The original story gave no context. A developer reading it had no idea why this mattered or what they were replacing.
+Three separate sections — Business Objective, Problem Context, and Desired Outcome — say the same thing from three angles. Collapse them into a single paragraph. Shorter stories give AI coding assistants a cleaner signal.
 
 ```
-Current situation: Managers export a stock report, identify low-inventory items in Excel,
-and manually create POs in the vendor portal — one vendor at a time, 8–15 minutes each.
+Before:
+## Business Objective
+Reduce average PO creation time from 8–15 minutes per vendor to under 2 minutes...
 
+## Problem Context
+Current situation: Managers export a stock report...
 Pain points:
 - Each PO takes 8–15 minutes to create manually
-- No audit trail exists for who created the PO or when
-- Managers on leave leave no fallback process
+...
 
-Operational risks: Stockouts when managers are absent; no coverage model exists.
-Constraints: POs ≥ $5,000 require procurement lead approval before submission.
+## Desired Outcome
+User impact: Managers approve a pre-populated PO in under 30 seconds...
+Business impact: Manual PO creation effort drops to under 20%...
+Success metrics: [table]
+
+After (one paragraph):
+## Context
+Managers currently export a stock report, filter it in Excel, and manually create POs in
+the vendor portal — one vendor at a time, 8–15 minutes each. There is no audit trail and
+no fallback when a manager is absent. This story replaces that process with a single-action
+approval flow that generates a downloadable PO document immediately.
 ```
 
 ---
 
-### Fix 3: Add testable Acceptance Criteria
+### Fix 3: Add numbered, testable Acceptance Criteria
 
 ```
 Before: (none)
 
 After:
-- AC1: A manager viewing a pending suggestion can approve it via a single confirm action
-  after reviewing a summary of vendor, quantity, and estimated value
-- AC2: When approved PO value < $5,000, the document is immediately available for download
-- AC3: When approved PO value ≥ $5,000, PO transitions to "Pending Procurement Approval"
-  and the procurement lead is notified
-- AC4: When the approval action fails, the suggestion status does not change and
-  the manager sees a recoverable error message
-- AC5: An approved suggestion is removed from the Pending queue
+1. A manager viewing a pending suggestion can approve it via a single confirm action
+   after reviewing a summary showing vendor name, quantity, and estimated value
+2. When the approved PO value is under $5,000, the document is immediately available
+   for download — no additional approval step required
+3. When the approved PO value is $5,000 or more, the PO transitions to
+   "Pending Procurement Approval" and the procurement lead is notified
+4. When the approval action fails, the suggestion status does not change and
+   the manager sees a recoverable error message
+5. An approved suggestion is removed from the Pending queue
+6. Submitting the approval action twice results in exactly one PO being created
 ```
 
-Each criterion is pass/fail. A QA engineer can test each independently.
+Each criterion is numbered and pass/fail. A QA engineer can test each independently. Notice that AC6 (duplicate prevention) replaces what used to be FR5 — the behavior is expressed as an observable condition, not a system obligation in a separate section.
 
 ---
 
-### Fix 4: Add BDD Scenarios (all four types)
+### Fix 4: Add BDD Scenarios (only the ones AC can't cover alone)
+
+Scenarios are optional. Include them when the AC involves a multi-step sequence that's hard to express as a single condition. Here, the threshold routing (AC3) and concurrent session conflict (AC4 edge case) benefit from scenarios.
 
 ```gherkin
-# Happy Path
 Scenario: Manager approves a low-value PO suggestion
   Given I am a warehouse manager with a pending suggestion estimated at $3,200
   When I click "Approve" and confirm
@@ -92,20 +107,17 @@ Scenario: Manager approves a low-value PO suggestion
   And a PO document is available for download within 10 seconds
   And the suggestion no longer appears in my Pending queue
 
-# Validation
 Scenario: Suggestion already actioned by another session
   Given a suggestion has already been dismissed
   When I attempt to approve it
   Then I see: "This suggestion is no longer available. It may have been approved or dismissed."
   And I am returned to the Pending queue
 
-# Edge Case
 Scenario: PO value is exactly $5,000
   Given I approve a suggestion with estimated value of exactly $5,000
   When the approval is confirmed
   Then the PO is routed to procurement approval — the $5,000 threshold is inclusive
 
-# Failure Handling
 Scenario: API failure during approval
   Given I confirm the approval action
   When the system returns an error before completing
@@ -115,24 +127,31 @@ Scenario: API failure during approval
 
 ---
 
-### Fix 5: Add Functional and Non-Functional Requirements
+### Fix 5: Add project-specific NFRs and Out of Scope — remove the FR section
 
-Functional Requirements express observable system obligations — not implementation:
+A Functional Requirements section duplicates AC and introduces shape prescription risk. Every "The system must..." statement that describes observable behavior belongs in AC. Audit, logging, and performance obligations belong in NFRs.
 
 ```
-FR1: The system must display a confirmation summary before the manager commits to approval
-FR2: The system must route POs at or above the configured threshold to procurement approval
-FR3: The system must generate a downloadable document within 10 seconds for below-threshold POs
-FR4: The system must log every approval with user ID, timestamp, and original values
-FR5: The system must prevent duplicate approvals from double-submit
-```
+Before:
+## Functional Requirements
+- FR1: The system must display a confirmation summary...  ← already AC1
+- FR2: The system must route POs above threshold...       ← already AC3
+- FR3: The system must generate a document within 10s...  ← NFR (Performance)
+- FR4: The system must log every approval with...         ← NFR (Auditability)
+- FR5: The system must prevent duplicate approvals...     ← now AC6
 
-Non-Functional Requirements are measurable:
-```
-Performance: Approval action completes within 3 seconds; document within 10 seconds
-Security: Only Warehouse Manager and Procurement Lead roles may approve suggestions
-Reliability: If document generation fails, approval is still recorded; document queued for retry
-Auditability: Every state transition is immutably logged with actor and timestamp
+After:
+## Non-Functional Requirements
+Performance: The approval action must complete within 3 seconds; document generation within 10 seconds.
+Security: Only Warehouse Manager and Procurement Lead roles may approve suggestions, restricted to their assigned location.
+Reliability: If document generation fails, the approval is still recorded and the document queued — the manager is notified when it becomes available.
+Auditability: Every approval action must be logged with actor, timestamp, original suggestion values, and resulting PO status.
+
+## Out of Scope
+- Bulk approval of multiple suggestions in a single action
+- Modifying the suggested vendor or quantity during the approval flow (see US4)
+- Direct API submission to vendor portals (Phase 2)
+- Automated approval without manager review
 ```
 
 ---
@@ -141,13 +160,15 @@ Auditability: Every state transition is immutably logged with actor and timestam
 
 | Dimension | Before | After |
 |---|---|---|
-| User Clarity | 1/3 | 3/3 |
+| User Clarity (incl. "In order to") | 1/3 | 3/3 |
 | Business Value | 1/3 | 3/3 |
 | AC Quality | 1/3 | 3/3 |
+| BDD Scenarios | 1/3 | 3/3 |
 | Story Size | 2/3 | 3/3 |
 | Edge Cases | 1/3 | 3/3 |
-| Dependencies | 1/3 | 2/3 |
-| **Total** | **7/18** | **17/18** |
+| Dependency Clarity | 1/3 | 2/3 |
+| Conciseness / NFR / Out of Scope | 1/3 | 3/3 |
+| **Total** | **9/24** | **23/24** |
 
 **Status:** ❌ Requires Rework → ✅ Dev-Ready
 
@@ -158,7 +179,7 @@ Auditability: Every state transition is immutably logged with actor and timestam
 | Step | Time |
 |---|---|
 | Original story (first draft) | 30 seconds |
-| Full template + AI-assisted AC and scenarios | 15 minutes |
+| Lean template + AI-assisted AC and scenarios | 15 minutes |
 
 **What the 15-minute investment prevents:**
 
@@ -176,14 +197,14 @@ Auditability: Every state transition is immutably logged with actor and timestam
 
 ## Key Lesson
 
-The canonical template is not bureaucracy. Each section prevents a specific category of failure:
+The lean template is not bureaucracy. Each section prevents a specific category of failure:
 
 | Section | Failure it prevents |
 |---|---|
-| Specific persona | Privilege escalation bugs; wrong feature built for wrong user |
-| Problem Context | Engineers build without understanding why — wrong tradeoffs |
-| Measurable "So that" | UX bar is unclear — engineers over- or under-deliver |
-| BDD Scenarios | QA discovers edge cases in production, not in review |
-| Functional Requirements | Behavior is ambiguous — engineers make inconsistent decisions |
-| Non-Functional Requirements | Performance and security treated as afterthoughts |
+| "In order to" + specific persona | Wrong feature built for the wrong user; privilege bugs |
+| Context paragraph | Engineers build without understanding why — wrong tradeoffs |
+| Numbered, declarative AC | QA discovers missing behaviors in production, not in review |
+| BDD Scenarios (optional) | Complex sequences misunderstood; boundary conditions missed |
+| No FR section | Shape prescription avoided; AI doesn't build the structure the story invented |
+| Project-specific NFRs | Performance and security treated as afterthoughts |
 | Out of Scope | Scope creep disguised as "while we're at it" |

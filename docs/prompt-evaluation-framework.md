@@ -19,10 +19,11 @@ Evaluation is the human layer that makes AI output safe to ship.
 Does the output have the right shape?
 
 ```
-[ ] Contains all required fields (title, In order to / As a / I want to / So that, AC, BDD Scenarios, FR, NFR, Out of Scope)
-[ ] Format matches the template
+[ ] Contains all required fields (title, In order to / As a / I want to / So that, Context paragraph, numbered AC, NFR, Out of Scope)
+[ ] Format matches the template — no separate Business Objective / Problem Context / Desired Outcome sections, no FR section
 [ ] No placeholder text ("insert user here", "TBD")
 [ ] No content that is obviously hallucinated or off-topic
+[ ] No shape prescription — no return type enumerations, outcome variants, or result structures in any section
 ```
 
 If any of these fail, regenerate with a more constrained prompt before going further.
@@ -58,12 +59,16 @@ Is the content accurate and complete?
 - Do Validation and Failure Handling scenarios quote the exact error message text?
 - Does each Failure Handling scenario confirm data is preserved and the user can retry?
 
-**For Functional Requirements:**
-- Is each FR a "The system must..." statement of observable behavior — not an implementation detail?
-- Does each FR correspond to at least one AC item or BDD scenario?
-
 **For Non-Functional Requirements:**
+- Are NFRs specific to this story — not boilerplate ("must be fast", "must be secure")?
 - Are performance, security, reliability, and auditability each addressed with a specific, measurable threshold?
+- Do NFRs describe behavior the system can actually support? (An NFR requiring a trace of a record that is never stored is infeasible.)
+
+**For Conciseness and shape:**
+- Is the story under 150 lines?
+- Is context expressed in one paragraph — not three separate Business Objective / Problem Context / Desired Outcome sections?
+- Is there no Functional Requirements (FR1, FR2...) section? Observable behaviors belong in AC.
+- Does any section contain shape prescription — return type enumerations, outcome variants, result object structures, or function signatures? AI coding assistants build exactly what stories describe; prescribing shape produces the wrong shape.
 
 **For Out of Scope:**
 - Is there an explicit list of what is not included in this story?
@@ -136,6 +141,28 @@ AI generates a story that covers an entire feature in one ticket.
 
 ```
 Each story should represent 1–3 days of work for a mid-level engineer. If a story touches more than 2 system layers or requires more than one PR, it is too large. Split it.
+```
+
+---
+
+### Failure: Story contains shape prescription
+AI generates a Functional Requirements section with outcome enumerations ("return one of: Pre-answer / Block / Resolved") or result object definitions. AI coding assistants build exactly what stories describe — prescribing shape produces the wrong implementation.
+
+**Fix:** Add an explicit instruction to prohibit shape prescription and redirect behavior to AC.
+
+```
+Do not include a Functional Requirements section. Do not enumerate return types, result structures, or outcome variants. Express all system behavior as numbered Acceptance Criteria: what the user or system observes when an action succeeds or fails.
+```
+
+---
+
+### Failure: Story is verbose with redundant sections
+AI generates separate Business Objective, Problem Context, and Desired Outcome sections that all say the same thing. A 200+ line story dilutes the signal for both humans and AI coding assistants.
+
+**Fix:** Add an explicit instruction to use the lean template.
+
+```
+Write a single Context paragraph (2–5 sentences) covering the current situation, the pain point, and what changes. Do not create separate Business Objective, Problem Context, or Desired Outcome sections.
 ```
 
 ---

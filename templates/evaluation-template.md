@@ -41,7 +41,7 @@ Use this template to document the evaluation of a batch of user stories. Run thi
 | Story Size | /3 | |
 | Edge Cases | /3 | |
 | Dependency Clarity | /3 | |
-| FR / NFR / Out of Scope | /3 | |
+| Conciseness / NFR / Out of Scope | /3 | |
 | **Total** | **/24** | |
 
 **Status:** ✅ Dev-ready / ⚠️ Needs work / ❌ Requires rework
@@ -66,7 +66,7 @@ Use this template to document the evaluation of a batch of user stories. Run thi
 | Story Size | /3 | |
 | Edge Cases | /3 | |
 | Dependency Clarity | /3 | |
-| FR / NFR / Out of Scope | /3 | |
+| Conciseness / NFR / Out of Scope | /3 | |
 | **Total** | **/24** | |
 
 **Status:** ✅ Dev-ready / ⚠️ Needs work / ❌ Requires rework

@@ -39,19 +39,18 @@ Story basics:
 [ ] Story is sized S or M (L stories need splitting)
 
 Acceptance criteria:
-[ ] All criteria use Given/When/Then format
-[ ] Every criterion has a clear pass/fail state
+[ ] All criteria are declarative pass/fail statements — no Given/When/Then in AC (that belongs in Scenarios)
+[ ] Every criterion has a clear pass/fail state and is independently evaluable
 [ ] Happy path is covered (at least 2–3 criteria)
 [ ] Error states are covered (API failure, invalid input, permission denied)
 [ ] Empty state is addressed if the feature displays data
 [ ] Edge cases identified from evaluation are included
+[ ] No shape prescription — no return type enumerations, outcome variants, or result structures
 
 Technical context:
-[ ] Domain entities referenced by name (from codebase analysis)
-[ ] API endpoints or services mentioned (if known)
-[ ] Data model changes noted (if required)
-[ ] Performance constraints stated (if applicable)
-[ ] Security or permission requirements explicit
+[ ] Domain entities referenced by business name (from codebase analysis) — not file paths or class names
+[ ] Performance constraints stated in NFRs with specific thresholds
+[ ] Security or permission requirements explicit in NFRs
 
 Dependencies:
 [ ] All blockers identified and linked

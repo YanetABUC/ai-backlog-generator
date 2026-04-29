@@ -3,6 +3,7 @@
 Use this template for every user story. Fill every section before marking a story Ready for Sprint.
 
 **Naming convention:** `US{number}-{kebab-case-title}.md` (e.g. `US3-manager-approves-purchase-order.md`)
+**Target length:** 80–150 lines. If a story exceeds 200 lines, review for redundancy before marking it ready.
 
 ---
 
@@ -23,59 +24,30 @@ Use this template for every user story. Fill every section before marking a stor
 **I want to** [the capability or action the user performs],
 **So that** [the direct benefit to the user — measurable, not circular].
 
----
-
-## Business Objective
-
-[One or two sentences connecting this story to a measurable business goal, OKR, or strategic initiative. Why does the business care about shipping this?]
+> **Ownership boundary:** This story defines *what behavior* the system must exhibit. Implementation decisions — data structures, return types, function signatures, error handling patterns — are owned by the development team.
 
 ---
 
-## Problem Context
+## Context
 
-**Current situation:** [How does the user accomplish this today? What tool, workaround, or manual process exists?]
-
-**Pain points:**
-- [Pain point 1 — specific and observable]
-- [Pain point 2]
-- [Pain point 3]
-
-**Operational risks of the current state:**
-- [Risk if we don't solve this — e.g., data loss, revenue impact, compliance gap]
-
-**Constraints:**
-- [Constraint 1 — regulatory, technical, organizational, or time-based]
-- [Constraint 2]
-
----
-
-## Desired Outcome
-
-**User impact:** [What changes about the user's experience or workflow when this story ships?]
-
-**Business impact:** [What measurable business outcome follows from the user impact?]
-
-**Success metrics:**
-| Metric | Baseline | Target |
-|---|---|---|
-| [metric 1] | [current] | [goal] |
-| [metric 2] | | |
+[2–5 sentences covering: the current situation, the pain point or gap, and what changes when this story ships. Do not repeat the User Story clauses. Do not break this into sub-sections — one paragraph only.]
 
 ---
 
 ## Acceptance Criteria
 
-*Each criterion must be: testable (pass/fail), deterministic (same input = same result), and independent (evaluable on its own).*
+*Each criterion must be: testable (pass/fail), deterministic (same input = same result), and independent (evaluable on its own). Numbered list. No Given/When/Then here — that belongs in Scenarios.*
 
-- AC1: [Criterion — written as a declarative statement of observable behavior]
-- AC2: [Criterion]
-- AC3: [Criterion]
-- AC4: [Criterion — error state]
-- AC5: [Criterion — edge case or boundary condition]
+1. [Criterion — observable behavior, pass/fail]
+2. [Criterion]
+3. [Criterion — error state]
+4. [Criterion — edge case or boundary condition]
 
 ---
 
 ## Scenarios (BDD)
+
+*Include only when the AC cannot fully express a complex multi-step interaction or sequence. If the AC is sufficient, omit this section entirely. Maximum 5 scenarios.*
 
 ### Happy Path
 
@@ -84,7 +56,7 @@ Scenario: [Descriptive name for the primary success flow]
   Given [the user is in the correct context / precondition is true]
   And [additional precondition if needed]
   When [the user performs the primary action]
-  Then [the expected result occurs — specific and observable]
+  Then [the expected result — specific and observable]
   And [secondary result or side effect]
 ```
 
@@ -94,7 +66,7 @@ Scenario: [Descriptive name for the primary success flow]
 Scenario: [Name — what invalid input or rule is being validated]
   Given [user is attempting the action]
   When [invalid input is submitted or a rule is violated]
-  Then [the system rejects the input with a specific message: "exact message text"]
+  Then [the system rejects with a specific message: "exact message text"]
   And [the user's data is preserved / the form is not cleared]
 ```
 
@@ -119,35 +91,15 @@ Scenario: [Name — system or integration failure]
 
 ---
 
-## Functional Requirements
-
-*Observable behaviors the system must exhibit. What, not how.*
-
-- **FR1:** [The system must... — describe observable behavior]
-- **FR2:** [The system must...]
-- **FR3:** [The system must...]
-- **FR4:** [The system must... — error or validation behavior]
-- **FR5:** [The system must... — edge case behavior]
-
----
-
 ## Non-Functional Requirements
 
-**Performance:**
-- [e.g., The feature must respond within 2 seconds under normal load for up to N concurrent users]
+*Only include NFRs **specific to this story**. Do not repeat project-wide standards (performance baselines, logging conventions, etc.). If no story-specific NFRs apply, omit this section entirely.*
 
-**Security:**
-- [e.g., Only users with the [role] permission may access this feature]
-- [e.g., All user input must be sanitized before storage and display]
-
-**Reliability:**
-- [e.g., The feature must remain available during partial downstream service failures]
-
-**Auditability:**
-- [e.g., Every state change must be logged with user ID, timestamp, and before/after values]
-
-**Scalability:**
-- [e.g., The feature must perform within SLA with up to N records in the dataset]
+**Performance:** [specific threshold — response time, concurrency, or volume that differs from baseline for this story]
+**Security:** [specific access rule — which roles, what is enforced server-side]
+**Reliability:** [specific degraded-mode or partial-failure behavior]
+**Auditability:** [what is logged, with which fields — specific to this story]
+**Scalability:** [concrete volume or load target for this story]
 
 ---
 
@@ -157,31 +109,39 @@ Scenario: [Name — system or integration failure]
 
 - [Item explicitly excluded — e.g., "Bulk approval of multiple suggestions in one action"]
 - [Item explicitly excluded]
-- [Item explicitly excluded]
+
+---
+
+## Dependencies
+
+- [ ] [dependency — e.g., "Design: Figma frame #123 approved"]
+- [ ] [dependency — e.g., "Backend: /api/inventory/locations endpoint available"]
 
 ---
 
 ## Media
 
-*Links to design assets, prototypes, or supporting research.*
-
 - **Design:** [Figma link or "TBD"]
 - **Prototype:** [link or "N/A"]
-- **Research / context:** [link to user research, analytics report, or support data — or "N/A"]
+- **Research / context:** [link or "N/A"]
 ```
 
 ---
 
 ## What This Template Prohibits
 
-The following sections must **never** appear in a user story:
+The following must **never** appear in a user story:
 
-| Prohibited section | Why |
+| Prohibited | Why |
 |---|---|
+| Separate Business Objective / Problem Context / Desired Outcome sections | Redundant — all three collapse into the Context paragraph |
+| Functional Requirements (FR1, FR2...) section | Duplicates AC and causes shape prescription — observable behaviors belong in AC |
+| Shape prescription — return types, result structures, outcome enumerations, function signatures | AI coding assistants build exactly what stories describe; prescribing shape produces the wrong shape |
 | Implementation Notes / Files to modify | Prescribes *how* — removes engineering autonomy |
 | Technical Design / Architecture decisions | Engineering concern, belongs in ADRs or design docs |
 | Pseudocode / code blocks | Prescribes *how* — stories describe *what* and *why* |
-| API specifications | Belongs in the technical spec, linked from the epic |
-| Database schema changes | Technical story or ADR, not a user story |
+| API specifications, database schema changes | Technical spec or ADR, not a user story |
 
-All system behavior belongs in: Acceptance Criteria, BDD Scenarios, Functional Requirements, or Non-Functional Requirements — expressed in plain English.
+**Shape prescription** is any statement that could be translated into a type definition or interface contract by an AI coding assistant: "return one of X / Y / Z," "the result must include fields A, B, C," "accept parameters X and Y." If a sentence defines what data looks like or how a component is structured, it belongs in the technical spec — not here.
+
+All system behavior belongs in Acceptance Criteria and (optionally) BDD Scenarios, expressed in plain English as observable behavior.

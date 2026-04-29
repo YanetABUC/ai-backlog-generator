@@ -60,10 +60,10 @@ Score each dimension 1–3:
 - 2 = Some dependencies identified, some unclear
 - 3 = All dependencies explicitly listed (APIs, design assets, other stories)
 
-### 8. Functional and Non-Functional Requirements (1–3)
-- 1 = FR/NFR sections missing or contain only vague statements ("the system should work correctly")
-- 2 = FRs present but some describe implementation rather than behavior; NFRs lack specific thresholds; Out of Scope absent
-- 3 = Each FR is a "The system must..." observable behavior statement; NFRs include specific thresholds for performance, security, reliability, and auditability; Out of Scope explicitly lists exclusions
+### 8. Conciseness, NFRs, and Out of Scope (1–3)
+- 1 = Separate Business Objective / Problem Context / Desired Outcome sections present; or a Functional Requirements section exists; or shape prescription found (return type enumerations, outcome variants, result structures); or story exceeds 200 lines
+- 2 = Context is one paragraph but slightly verbose; NFRs present but some are boilerplate; Out of Scope present but thin; no shape prescription
+- 3 = Story is under 150 lines; context is one concise paragraph; no FR section; no shape prescription in any section; NFRs are project-specific with measurable thresholds; Out of Scope explicitly lists exclusions
 
 ## Output Format for Each Story
 
@@ -77,7 +77,7 @@ Score each dimension 1–3:
 | Story Size | /3 | [specific issue or "meets bar"] |
 | Edge Cases | /3 | [specific issue or "meets bar"] |
 | Dependencies | /3 | [specific issue or "meets bar"] |
-| FR / NFR / Out of Scope | /3 | [specific issue or "meets bar"] |
+| Conciseness / NFR / Out of Scope | /3 | [specific issue or "meets bar"] |
 | **Total** | **/24** | |
 
 **Status:** Dev-Ready (22–24) / Needs Refinement (17–21) / Requires Rework (below 17)
@@ -118,7 +118,9 @@ A story FAILS if any of the following are true:
 - No error state is defined
 - The story requires more than one PR across different services
 - At least one dependency is undefined
-- Functional Requirements are missing or describe implementation rather than observable behavior
+- Story contains a Functional Requirements (FR1, FR2...) section — observable behaviors belong in AC
+- Separate Business Objective, Problem Context, or Desired Outcome sections exist — should be one Context paragraph
+- Shape prescription found: return type enumerations, outcome variants ("return one of X / Y / Z"), result object structures, or function signatures in any section
 - Non-Functional Requirements are missing or lack specific thresholds
 - Out of Scope section is absent
 
