@@ -4,22 +4,28 @@ A story that isn't dev-ready isn't done — it's deferred work disguised as prog
 
 ---
 
-## The Seven Quality Dimensions
+## The Eight Quality Dimensions
 
 ### 1. Clarity of User and Context
 
 **What to check:**
-- Is the user persona specific, not generic? ("Admin user managing multi-location inventory" vs. "user")
-- Is the context (when, where, why) explicit?
-- Would a new team member understand who this is for?
+- Does the story start with "In order to" — a specific business goal or outcome, not a feature description?
+- Is the user persona specific, not generic? ("warehouse manager responsible for daily inventory replenishment at a single location" vs. "user")
+- Is the context (when, where, why) explicit in the persona and "I want to" clause?
+- Would a new team member understand who this is for and what they are trying to accomplish?
 
 **Red flags:**
-- "As a user, I want..." with no persona definition
-- Ambiguous "they" or "the system"
+- Story starts with "As a user" — missing the "In order to" business goal
+- "In order to" clause is circular ("In order to use the feature") — not a business outcome
+- Persona is vague: "user", "admin", or "the system" with no role or context
+- Ambiguous "they" or "the system" with no qualifier
 - Missing trigger or context for the action
 
 **Good example:**
-> As a warehouse manager overseeing 3+ locations, I want to filter low-stock alerts by location so that I can prioritize replenishment without cross-location noise.
+> **In order to** maintain stock levels across all SKUs before vendor order cutoffs,
+> **As a** warehouse manager responsible for daily inventory replenishment at a single location,
+> **I want to** view a prioritized list of all pending purchase order suggestions for my location,
+> **So that** I can review and act on every replenishment need before the daily vendor cutoff — without exporting or searching manually.
 
 ---
 
@@ -165,11 +171,60 @@ Dependencies:
 
 ---
 
+### 8. Functional and Non-Functional Requirements Are Present
+
+**What functional requirements are:** Observable system behaviors expressed as "The system must..." statements. They describe *what* the system does, not *how* it does it. Every AC item should be backed by at least one FR.
+
+**What non-functional requirements are:** Measurable constraints on system quality — performance thresholds, security access rules, reliability expectations, auditability specifics, and scalability limits.
+
+**What to check (Functional Requirements):**
+- Is each FR a "The system must..." statement of observable behavior, not an implementation detail?
+- Does each FR correspond to at least one AC item or BDD scenario?
+- Are error and validation behaviors explicitly stated as FRs, not just implied by ACs?
+- Are edge case behaviors captured as FRs?
+
+**What to check (Non-Functional Requirements):**
+- Is a performance threshold defined with a specific number (response time, concurrency, volume)?
+- Are security access rules stated explicitly — which roles, and what is enforced server-side?
+- Is there a reliability requirement for partial failure or degraded mode?
+- Are auditability requirements specific — what is logged, with which fields?
+- Is scalability defined by a concrete volume or load target?
+
+**What to check (Out of Scope):**
+- Is there an explicit list of what is *not* included in this story?
+- Does it call out Phase 2 or future items that stakeholders might assume are included?
+
+**Red flags (Functional Requirements):**
+- "The system should work correctly" — not a specific observable behavior
+- FRs that describe implementation ("The system must call the /approve endpoint") — that belongs in a technical spec
+- No FR for an error state that has a BDD Failure Handling scenario
+
+**Red flags (Non-Functional Requirements):**
+- "The feature must be fast" — no threshold defined
+- "The feature must be secure" — no specific rule or access control named
+- Performance, security, or reliability omitted entirely — assumed but not committed to
+
+**Red flags (Out of Scope):**
+- No Out of Scope section — leaves engineering boundaries undefined
+- Out of Scope is empty when stakeholders have mentioned adjacent features during discovery
+
+**Good examples (Functional Requirements):**
+> - FR3: The system must restrict the queue to suggestions matching the manager's assigned location(s); cross-location data must never be accessible
+> - FR5: The system must not create suggestions for SKUs that have no reorder point configured
+
+**Good examples (Non-Functional Requirements):**
+> - Performance: The queue must load within 2 seconds for a location with up to 2,000 pending suggestions
+> - Security: Location-based data isolation must be enforced server-side; client-side filtering alone is not sufficient
+> - Auditability: Every suggestion creation event must be logged with: triggering event ID, SKU ID, stock level at time of trigger, reorder point value, and timestamp
+
+---
+
 ## Quick Quality Checklist
 
 Use this before moving a story to "Ready for Sprint":
 
 ```
+[ ] Story starts with "In order to" — a specific business goal, not a feature description
 [ ] User persona is specific — role + context, not "user"
 [ ] Business value is stated with a measurable "so that" clause
 [ ] Acceptance Criteria are a checklist of declarative, pass/fail conditions
@@ -185,6 +240,9 @@ Use this before moving a story to "Ready for Sprint":
 [ ] No undefined external dependencies
 [ ] Definition of Done is explicit
 [ ] An engineer unfamiliar with context could start work without a meeting
+[ ] Each Functional Requirement is a "The system must..." statement of observable behavior — no implementation details
+[ ] Non-Functional Requirements include specific thresholds for performance, security, reliability, and auditability
+[ ] Out of Scope is explicit — lists what is not included in this story
 ```
 
 ---
@@ -200,8 +258,8 @@ When using AI to evaluate story quality, score each dimension 1–3:
 | 1 | Does not meet — rewrite required |
 
 **Total score interpretation:**
-- 19–21: Dev-ready
-- 15–18: Needs targeted refinement
-- Below 15: Needs significant rework
+- 22–24: Dev-ready
+- 17–21: Needs targeted refinement
+- Below 17: Needs significant rework
 
 See the [evaluation template](../templates/evaluation-template.md) and [evaluate-story-quality prompt](../prompts/evaluate-story-quality.md).

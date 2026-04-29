@@ -26,9 +26,9 @@ Evaluate each of the following user stories against the quality rubric below. Yo
 Score each dimension 1–3:
 
 ### 1. User Clarity (1–3)
-- 1 = Generic "user" or no persona
-- 2 = Role identified but no context
-- 3 = Specific persona with role + context + implied goal
+- 1 = Story does not start with "In order to", or the business goal is circular / a feature description
+- 2 = "In order to" present but vague; persona identified but no role context
+- 3 = Leads with a specific business goal; persona is role + context, not just "user"
 
 ### 2. Business Value (1–3)
 - 1 = No "so that" clause, or it's circular ("so that it works")
@@ -36,24 +36,34 @@ Score each dimension 1–3:
 - 3 = Measurable outcome tied to a real user goal or business metric
 
 ### 3. Acceptance Criteria Quality (1–3)
-- 1 = Vague or missing ("system should work as expected")
-- 2 = Partially testable (some pass/fail, some subjective)
-- 3 = All criteria in Given/When/Then format, all pass/fail
+- 1 = Vague or missing ("system should work as expected") or written as Given/When/Then (those are BDD Scenarios, not AC)
+- 2 = Partially testable — some pass/fail conditions, some subjective or compound
+- 3 = All criteria are declarative pass/fail statements; each is independent and atomic; no implementation details
 
-### 4. Story Size (1–3)
+### 4. BDD Scenarios (1–3)
+- 1 = Missing or only Happy Path present
+- 2 = At least two scenario types present, but error text is unquoted or a scenario has multiple When actions
+- 3 = All four types present (Happy Path, Validation, Edge Case, Failure Handling); each has a single When; error messages are quoted; Failure Handling confirms data is preserved
+
+### 5. Story Size (1–3)
 - 1 = Too large — spans multiple subsystems or > 5 days
 - 2 = Borderline — could fit in sprint but risky
 - 3 = Clearly sprint-ready — 1–3 days of focused work
 
-### 5. Edge Case Coverage (1–3)
+### 6. Edge Case Coverage (1–3)
 - 1 = Happy path only
 - 2 = Happy path + some edge cases
-- 3 = Happy path + error state + at least 2 edge cases
+- 3 = Happy path + error state + at least 2 edge cases with explicit threshold behavior
 
-### 6. Dependency Clarity (1–3)
+### 7. Dependency Clarity (1–3)
 - 1 = Dependencies not mentioned or unknown
 - 2 = Some dependencies identified, some unclear
 - 3 = All dependencies explicitly listed (APIs, design assets, other stories)
+
+### 8. Functional and Non-Functional Requirements (1–3)
+- 1 = FR/NFR sections missing or contain only vague statements ("the system should work correctly")
+- 2 = FRs present but some describe implementation rather than behavior; NFRs lack specific thresholds; Out of Scope absent
+- 3 = Each FR is a "The system must..." observable behavior statement; NFRs include specific thresholds for performance, security, reliability, and auditability; Out of Scope explicitly lists exclusions
 
 ## Output Format for Each Story
 
@@ -63,12 +73,14 @@ Score each dimension 1–3:
 | User Clarity | /3 | [specific issue or "meets bar"] |
 | Business Value | /3 | [specific issue or "meets bar"] |
 | AC Quality | /3 | [specific issue or "meets bar"] |
+| BDD Scenarios | /3 | [specific issue or "meets bar"] |
 | Story Size | /3 | [specific issue or "meets bar"] |
 | Edge Cases | /3 | [specific issue or "meets bar"] |
 | Dependencies | /3 | [specific issue or "meets bar"] |
-| **Total** | **/18** | |
+| FR / NFR / Out of Scope | /3 | [specific issue or "meets bar"] |
+| **Total** | **/24** | |
 
-**Status:** Dev-Ready (16–18) / Needs Refinement (12–15) / Requires Rework (below 12)
+**Status:** Dev-Ready (22–24) / Needs Refinement (17–21) / Requires Rework (below 17)
 
 **Top 2 fixes needed:**
 1. [specific fix with example]
@@ -97,12 +109,18 @@ For teams that need a quick filter before detailed review:
 Evaluate the following stories with a simple pass/fail on each quality gate.
 
 A story FAILS if any of the following are true:
+- Story does not start with "In order to", or the business goal is a feature description rather than an outcome
 - User is generic ("user", "admin", "customer" with no context)
 - "So that" clause is missing, circular, or doesn't state a user outcome
-- Acceptance criteria are not in Given/When/Then format
+- Acceptance criteria use Given/When/Then format (those are BDD Scenarios, not AC)
+- Acceptance criteria are vague or not independently pass/fail
+- Not all four BDD scenario types are present: Happy Path, Validation, Edge Case, Failure Handling
 - No error state is defined
 - The story requires more than one PR across different services
 - At least one dependency is undefined
+- Functional Requirements are missing or describe implementation rather than observable behavior
+- Non-Functional Requirements are missing or lack specific thresholds
+- Out of Scope section is absent
 
 For each story:
 - List which gates it fails (or "PASS — all gates")
@@ -119,7 +137,7 @@ Stories:
 ```
 Compare the following two versions of a user story and evaluate which is higher quality.
 
-For each version, score it on the 6-dimension rubric (1–3 each).
+For each version, score it on the 8-dimension rubric (1–3 each).
 
 Identify specifically what improved from Version A to Version B, and what (if anything) regressed.
 
@@ -141,8 +159,8 @@ Evaluate the following stories and output a summary scorecard.
 
 For each story, provide:
 - Story title
-- Score per dimension (abbreviated: UC, BV, AC, SS, EC, DC)
-- Total score /18
+- Score per dimension (abbreviated: UC, BV, AC, BDD, SS, EC, DC, FR)
+- Total score /24
 - Status: ✅ Dev-ready / ⚠️ Needs work / ❌ Rework
 
 After the scorecard, list the top 3 most common issues across all stories.
@@ -157,11 +175,11 @@ Stories:
 
 | Total Score | Status | Action |
 |---|---|---|
-| 16–18 | Dev-ready | Proceed to engineering handoff |
-| 14–15 | Minor issues | Apply targeted fixes, no full rewrite |
-| 12–13 | Moderate issues | Rewrite weak sections using refinement prompts |
-| 10–11 | Significant issues | Substantial rewrite needed |
-| Below 10 | Poor quality | Return to story generation with better context |
+| 22–24 | Dev-ready | Proceed to engineering handoff |
+| 20–21 | Minor issues | Apply targeted fixes, no full rewrite |
+| 17–19 | Moderate issues | Rewrite weak sections using refinement prompts |
+| 14–16 | Significant issues | Substantial rewrite needed |
+| Below 14 | Poor quality | Return to story generation with better context |
 
 ---
 
@@ -171,16 +189,18 @@ Stories:
 
 | Dimension | Score | Issue |
 |---|---|---|
-| User Clarity | 1/3 | "User" has no role or context — who generates reports and for what purpose? |
-| Business Value | 1/3 | "Make decisions" is circular — what decision? What outcome? |
+| User Clarity | 1/3 | Story starts with "As a user" — missing "In order to" business goal; "user" has no role or context |
+| Business Value | 1/3 | "Make decisions" is circular — what decision? What measurable outcome? |
 | AC Quality | 1/3 | No acceptance criteria provided |
-| Story Size | 2/3 | Reports is a broad feature — unclear scope |
+| BDD Scenarios | 1/3 | No scenarios of any type provided |
+| Story Size | 2/3 | Reports is a broad feature — scope unclear |
 | Edge Cases | 1/3 | No criteria = no edge cases covered |
 | Dependencies | 1/3 | Reporting data source not mentioned |
-| **Total** | **7/18** | |
+| FR / NFR / Out of Scope | 1/3 | No functional requirements, no NFRs, no Out of Scope |
+| **Total** | **9/24** | |
 
 **Status:** ❌ Requires Rework
 
 **Top 2 fixes:**
-1. Replace "user" with a specific persona: "As an operations manager reviewing weekly fulfillment data..." and tie the outcome to a measurable action: "...so that I can identify fulfillment delays before the daily shipping cutoff."
-2. Add at least 5 Given/When/Then acceptance criteria covering: what reports are displayed, how they're filtered, the empty state, the error state, and at least one role-based behavior.
+1. Rewrite to lead with a business goal and a specific persona: "In order to identify fulfillment delays before the daily shipping cutoff, As an operations manager reviewing weekly fulfillment data, I want to view a filtered report of unfulfilled orders, So that I can escalate at-risk orders before the carrier pickup window closes."
+2. Add at least 5 declarative AC items (not Given/When/Then) covering: what is displayed, how it is filtered, the empty state, the error state, and at least one access-control behavior — then add the four required BDD scenario types to prove each AC item is testable.

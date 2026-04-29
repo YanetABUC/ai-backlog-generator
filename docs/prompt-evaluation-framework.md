@@ -19,7 +19,7 @@ Evaluation is the human layer that makes AI output safe to ship.
 Does the output have the right shape?
 
 ```
-[ ] Contains all required fields (title, user, value, criteria)
+[ ] Contains all required fields (title, In order to / As a / I want to / So that, AC, BDD Scenarios, FR, NFR, Out of Scope)
 [ ] Format matches the template
 [ ] No placeholder text ("insert user here", "TBD")
 [ ] No content that is obviously hallucinated or off-topic
@@ -40,16 +40,34 @@ Is the content accurate and complete?
 - Are the child stories implied correctly?
 
 **For User Stories:**
-- Is the persona specific to this product's user types?
+- Does the story start with "In order to" — a specific business goal, not a feature description?
+- Is the persona specific to this product's user types — role and context, not just "user"?
 - Is the action the user actually performs (not the system)?
-- Is the value tied to a real outcome?
+- Is the "So that" value tied to a real, measurable outcome?
 - Would this story survive a sprint review?
 
 **For Acceptance Criteria:**
-- Is each criterion independently testable?
-- Is there a clear pass/fail state?
+- Is each criterion a declarative statement of observable behavior — not a Given/When/Then (those belong in BDD Scenarios)?
+- Is there a clear pass/fail state for each criterion independently?
 - Are error states covered?
-- Are edge cases represented?
+- Are edge cases and boundary conditions represented?
+
+**For BDD Scenarios:**
+- Are all four scenario types present: Happy Path, Validation, Edge Case, Failure Handling?
+- Does each scenario have a single When action?
+- Do Validation and Failure Handling scenarios quote the exact error message text?
+- Does each Failure Handling scenario confirm data is preserved and the user can retry?
+
+**For Functional Requirements:**
+- Is each FR a "The system must..." statement of observable behavior — not an implementation detail?
+- Does each FR correspond to at least one AC item or BDD scenario?
+
+**For Non-Functional Requirements:**
+- Are performance, security, reliability, and auditability each addressed with a specific, measurable threshold?
+
+**For Out of Scope:**
+- Is there an explicit list of what is not included in this story?
+- Does it name adjacent features or Phase 2 items that stakeholders might assume are in scope?
 
 ---
 
@@ -90,23 +108,23 @@ Track which prompts produce reliably good output. Use this scorecard:
 ## Common Failure Modes and Fixes
 
 ### Failure: Output is too generic
-AI generates "As a user, I want to view my profile" instead of domain-specific stories.
+AI generates stories with vague personas ("As a user, I want to view my profile") or business goals that don't reflect the product domain.
 
-**Fix:** Add persona definitions and domain context to the system prompt or as a preamble.
+**Fix:** Add persona definitions, domain context, and the required story format to the system prompt or as a preamble.
 
 ```
-Context: This is a B2B SaaS platform for warehouse operations. Users are warehouse managers, pickers, and logistics coordinators. Avoid generic personas.
+Context: This is a B2B SaaS platform for warehouse operations. Users are warehouse managers, pickers, and logistics coordinators. Avoid generic personas. Every story must start with "In order to" followed by a specific business goal, not a feature description.
 ```
 
 ---
 
 ### Failure: Acceptance criteria are vague
-AI generates "The system should respond quickly" instead of measurable criteria.
+AI generates "The system should respond quickly" or writes criteria in Given/When/Then format instead of declarative pass/fail statements.
 
-**Fix:** Add explicit instructions to use Given/When/Then format and include specific thresholds.
+**Fix:** Add explicit instructions to write AC as declarative observable behavior statements, and instruct the model to place Given/When/Then content in the BDD Scenarios section instead.
 
 ```
-All acceptance criteria must use Given/When/Then format. If a performance criterion is included, specify a measurable threshold (e.g., "under 300ms", "fewer than 3 clicks").
+Acceptance Criteria must be declarative statements of observable behavior — each one independently pass/fail. Do not use Given/When/Then in the AC section; that format belongs in BDD Scenarios. If a performance or threshold criterion is included, name the specific value (e.g., "within 2 seconds", "for up to 2,000 records").
 ```
 
 ---
