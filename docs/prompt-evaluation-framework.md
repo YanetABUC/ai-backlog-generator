@@ -19,10 +19,11 @@ Evaluation is the human layer that makes AI output safe to ship.
 Does the output have the right shape?
 
 ```
-[ ] Contains all required fields (title, user, value, criteria)
-[ ] Format matches the template
+[ ] Contains all required fields (title, In order to / As a / I want to / So that, Context paragraph, numbered AC, NFR, Out of Scope)
+[ ] Format matches the template — no separate Business Objective / Problem Context / Desired Outcome sections, no FR section
 [ ] No placeholder text ("insert user here", "TBD")
 [ ] No content that is obviously hallucinated or off-topic
+[ ] No shape prescription — no return type enumerations, outcome variants, or result structures in any section
 ```
 
 If any of these fail, regenerate with a more constrained prompt before going further.
@@ -40,16 +41,38 @@ Is the content accurate and complete?
 - Are the child stories implied correctly?
 
 **For User Stories:**
-- Is the persona specific to this product's user types?
+- Does the story start with "In order to" — a specific business goal, not a feature description?
+- Is the persona specific to this product's user types — role and context, not just "user"?
 - Is the action the user actually performs (not the system)?
-- Is the value tied to a real outcome?
+- Is the "So that" value tied to a real, measurable outcome?
 - Would this story survive a sprint review?
 
 **For Acceptance Criteria:**
-- Is each criterion independently testable?
-- Is there a clear pass/fail state?
+- Is each criterion a declarative statement of observable behavior — not a Given/When/Then (those belong in BDD Scenarios)?
+- Is there a clear pass/fail state for each criterion independently?
 - Are error states covered?
-- Are edge cases represented?
+- Are edge cases and boundary conditions represented?
+
+**For BDD Scenarios:**
+- Are all four scenario types present: Happy Path, Validation, Edge Case, Failure Handling?
+- Does each scenario have a single When action?
+- Do Validation and Failure Handling scenarios quote the exact error message text?
+- Does each Failure Handling scenario confirm data is preserved and the user can retry?
+
+**For Non-Functional Requirements:**
+- Are NFRs specific to this story — not boilerplate ("must be fast", "must be secure")?
+- Are performance, security, reliability, and auditability each addressed with a specific, measurable threshold?
+- Do NFRs describe behavior the system can actually support? (An NFR requiring a trace of a record that is never stored is infeasible.)
+
+**For Conciseness and shape:**
+- Is the story under 150 lines?
+- Is context expressed in one paragraph — not three separate Business Objective / Problem Context / Desired Outcome sections?
+- Is there no Functional Requirements (FR1, FR2...) section? Observable behaviors belong in AC.
+- Does any section contain shape prescription — return type enumerations, outcome variants, result object structures, or function signatures? AI coding assistants build exactly what stories describe; prescribing shape produces the wrong shape.
+
+**For Out of Scope:**
+- Is there an explicit list of what is not included in this story?
+- Does it name adjacent features or Phase 2 items that stakeholders might assume are in scope?
 
 ---
 
@@ -90,23 +113,23 @@ Track which prompts produce reliably good output. Use this scorecard:
 ## Common Failure Modes and Fixes
 
 ### Failure: Output is too generic
-AI generates "As a user, I want to view my profile" instead of domain-specific stories.
+AI generates stories with vague personas ("As a user, I want to view my profile") or business goals that don't reflect the product domain.
 
-**Fix:** Add persona definitions and domain context to the system prompt or as a preamble.
+**Fix:** Add persona definitions, domain context, and the required story format to the system prompt or as a preamble.
 
 ```
-Context: This is a B2B SaaS platform for warehouse operations. Users are warehouse managers, pickers, and logistics coordinators. Avoid generic personas.
+Context: This is a B2B SaaS platform for warehouse operations. Users are warehouse managers, pickers, and logistics coordinators. Avoid generic personas. Every story must start with "In order to" followed by a specific business goal, not a feature description.
 ```
 
 ---
 
 ### Failure: Acceptance criteria are vague
-AI generates "The system should respond quickly" instead of measurable criteria.
+AI generates "The system should respond quickly" or writes criteria in Given/When/Then format instead of declarative pass/fail statements.
 
-**Fix:** Add explicit instructions to use Given/When/Then format and include specific thresholds.
+**Fix:** Add explicit instructions to write AC as declarative observable behavior statements, and instruct the model to place Given/When/Then content in the BDD Scenarios section instead.
 
 ```
-All acceptance criteria must use Given/When/Then format. If a performance criterion is included, specify a measurable threshold (e.g., "under 300ms", "fewer than 3 clicks").
+Acceptance Criteria must be declarative statements of observable behavior — each one independently pass/fail. Do not use Given/When/Then in the AC section; that format belongs in BDD Scenarios. If a performance or threshold criterion is included, name the specific value (e.g., "within 2 seconds", "for up to 2,000 records").
 ```
 
 ---
@@ -118,6 +141,28 @@ AI generates a story that covers an entire feature in one ticket.
 
 ```
 Each story should represent 1–3 days of work for a mid-level engineer. If a story touches more than 2 system layers or requires more than one PR, it is too large. Split it.
+```
+
+---
+
+### Failure: Story contains shape prescription
+AI generates a Functional Requirements section with outcome enumerations ("return one of: Pre-answer / Block / Resolved") or result object definitions. AI coding assistants build exactly what stories describe — prescribing shape produces the wrong implementation.
+
+**Fix:** Add an explicit instruction to prohibit shape prescription and redirect behavior to AC.
+
+```
+Do not include a Functional Requirements section. Do not enumerate return types, result structures, or outcome variants. Express all system behavior as numbered Acceptance Criteria: what the user or system observes when an action succeeds or fails.
+```
+
+---
+
+### Failure: Story is verbose with redundant sections
+AI generates separate Business Objective, Problem Context, and Desired Outcome sections that all say the same thing. A 200+ line story dilutes the signal for both humans and AI coding assistants.
+
+**Fix:** Add an explicit instruction to use the lean template.
+
+```
+Write a single Context paragraph (2–5 sentences) covering the current situation, the pain point, and what changes. Do not create separate Business Objective, Problem Context, or Desired Outcome sections.
 ```
 
 ---

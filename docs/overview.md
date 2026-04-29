@@ -20,6 +20,37 @@ Each stage has its own workflow, prompts, and quality gates. You don't have to u
 
 ---
 
+## Workflow Diagram
+
+```mermaid
+flowchart TD
+    subgraph entry["Choose your entry point"]
+        WF01["Workflow 01\nDiscovery"]
+        WF02["Workflow 02\nPrototype"]
+        WF03["Workflow 03\nCodebase"]
+    end
+
+    WF01 --> P1["Problem statement\nValidated epics"]
+    WF02 --> P2["Journey map\nScreen analysis"]
+    WF03 --> P3["Domain model\nGap analysis"]
+
+    P1 & P2 & P3 --> GEN
+
+    GEN["Generate user stories\nLean template · 80-150 lines"]
+
+    GEN --> EVAL["Evaluate — Workflow 04\n8 dimensions · grade /10"]
+
+    EVAL --> DEC{Grade >= 9 / 10?}
+
+    DEC -->|No| REF["Refine\nFix persona · AC · BDD format\nRemove FR · shape prescription\nCollapse context sections"]
+
+    REF --> EVAL
+
+    DEC -->|Yes| HAND["Dev-ready handoff\nWorkflow 05"]
+```
+
+---
+
 ## Stage 1: Discovery
 
 **Goal:** Extract structured product intent from raw input.

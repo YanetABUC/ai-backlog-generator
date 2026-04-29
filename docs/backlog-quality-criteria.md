@@ -4,22 +4,28 @@ A story that isn't dev-ready isn't done — it's deferred work disguised as prog
 
 ---
 
-## The Seven Quality Dimensions
+## The Eight Quality Dimensions
 
 ### 1. Clarity of User and Context
 
 **What to check:**
-- Is the user persona specific, not generic? ("Admin user managing multi-location inventory" vs. "user")
-- Is the context (when, where, why) explicit?
-- Would a new team member understand who this is for?
+- Does the story start with "In order to" — a specific business goal or outcome, not a feature description?
+- Is the user persona specific, not generic? ("warehouse manager responsible for daily inventory replenishment at a single location" vs. "user")
+- Is the context (when, where, why) explicit in the persona and "I want to" clause?
+- Would a new team member understand who this is for and what they are trying to accomplish?
 
 **Red flags:**
-- "As a user, I want..." with no persona definition
-- Ambiguous "they" or "the system"
+- Story starts with "As a user" — missing the "In order to" business goal
+- "In order to" clause is circular ("In order to use the feature") — not a business outcome
+- Persona is vague: "user", "admin", or "the system" with no role or context
+- Ambiguous "they" or "the system" with no qualifier
 - Missing trigger or context for the action
 
 **Good example:**
-> As a warehouse manager overseeing 3+ locations, I want to filter low-stock alerts by location so that I can prioritize replenishment without cross-location noise.
+> **In order to** maintain stock levels across all SKUs before vendor order cutoffs,
+> **As a** warehouse manager responsible for daily inventory replenishment at a single location,
+> **I want to** view a prioritized list of all pending purchase order suggestions for my location,
+> **So that** I can review and act on every replenishment need before the daily vendor cutoff — without exporting or searching manually.
 
 ---
 
@@ -165,11 +171,59 @@ Dependencies:
 
 ---
 
+### 8. Conciseness, NFRs, and Out of Scope
+
+**Why this dimension exists:** AI coding assistants treat every sentence in a story as a spec. Redundant sections dilute the signal and waste context. Shape prescription — enumerating return types, result structures, or outcome variants — causes the AI to build exactly that shape, even when a simpler design would work. This dimension checks that the story is lean, does not prescribe implementation, and is explicit about its boundaries.
+
+**What to check (Conciseness and structure):**
+- Is the story under 150 lines?
+- Is context expressed in a single paragraph — not split into Business Objective, Problem Context, and Desired Outcome sections?
+- Is there no separate Functional Requirements section? Observable behaviors belong in AC.
+- Does any section contain shape prescription: return type enumerations, result object definitions, or function signatures?
+
+**What to check (Non-Functional Requirements):**
+- Are NFRs specific to this story — not boilerplate that applies to every story?
+- Does each performance NFR include a specific number (response time, concurrency, volume)?
+- Do security NFRs name specific roles and state what is enforced server-side?
+- Do reliability NFRs describe the specific degraded-mode behavior for this feature?
+
+**What to check (Out of Scope):**
+- Is there an explicit list of what is *not* included in this story?
+- Does it name adjacent features or Phase 2 items that stakeholders might assume are in scope?
+
+**Red flags (Conciseness and structure):**
+- Separate Business Objective, Problem Context, and Desired Outcome sections — should be one Context paragraph
+- A Functional Requirements (FR1, FR2...) section — it duplicates AC and risks shape prescription
+- "Return one of: Pre-answer / Block / Resolved" — shape prescription; engineers choose the structure
+- "The system must call the /approve endpoint" — implementation detail in any section
+- Story exceeds 200 lines without justification
+
+**Red flags (Non-Functional Requirements):**
+- "The feature must be fast" — no threshold defined
+- "The feature must be secure" — no specific rule or role named
+- NFRs copied verbatim from the template with no values filled in
+
+**Red flags (Out of Scope):**
+- No Out of Scope section — leaves engineering boundaries undefined
+- Out of Scope is empty when stakeholders have mentioned adjacent features during discovery
+
+**Good examples (NFRs — specific and story-scoped):**
+> - Performance: The queue must load within 2 seconds for a location with up to 2,000 pending suggestions
+> - Security: Location-based data isolation must be enforced server-side; client-side filtering alone is not sufficient
+> - Auditability: Every approval action must be logged with user ID, timestamp, and original suggestion values
+
+**Good examples (Out of Scope):**
+> - Bulk approval of multiple suggestions in a single action
+> - Exporting the queue to CSV or Excel from this view
+
+---
+
 ## Quick Quality Checklist
 
 Use this before moving a story to "Ready for Sprint":
 
 ```
+[ ] Story starts with "In order to" — a specific business goal, not a feature description
 [ ] User persona is specific — role + context, not "user"
 [ ] Business value is stated with a measurable "so that" clause
 [ ] Acceptance Criteria are a checklist of declarative, pass/fail conditions
@@ -185,6 +239,11 @@ Use this before moving a story to "Ready for Sprint":
 [ ] No undefined external dependencies
 [ ] Definition of Done is explicit
 [ ] An engineer unfamiliar with context could start work without a meeting
+[ ] Story is under 150 lines — no redundant narrative sections (no separate Business Objective / Problem Context / Desired Outcome)
+[ ] No Functional Requirements section — observable behaviors are expressed through AC
+[ ] No shape prescription — no return types, result structures, outcome enumerations, or function signatures in any section
+[ ] NFRs are project-specific with measurable thresholds — not boilerplate
+[ ] Out of Scope is explicit — lists what is not included in this story
 ```
 
 ---
@@ -200,8 +259,8 @@ When using AI to evaluate story quality, score each dimension 1–3:
 | 1 | Does not meet — rewrite required |
 
 **Total score interpretation:**
-- 19–21: Dev-ready
-- 15–18: Needs targeted refinement
-- Below 15: Needs significant rework
+- 22–24: Dev-ready
+- 17–21: Needs targeted refinement
+- Below 17: Needs significant rework
 
 See the [evaluation template](../templates/evaluation-template.md) and [evaluate-story-quality prompt](../prompts/evaluate-story-quality.md).

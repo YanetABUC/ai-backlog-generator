@@ -110,7 +110,29 @@ These rules become acceptance criteria, edge cases, and constraints in your stor
 
 ---
 
-## Step 5: Generate Stories From Codebase Analysis
+## Step 5: Identify UX Gaps, Broken Processes, and Missing Scenarios
+
+The codebase shows what was built — but not what was left out, what breaks under real conditions, or what the user has no way to recover from. This step surfaces those blind spots before they become production bugs or support escalations.
+
+**Prompt for Claude Code:**
+```
+Analyze the codebase for [domain area] and identify:
+
+1. UX gaps — user-facing flows that have no error state, no empty state, no loading state, or no way for the user to recover from a failure
+2. Broken processes — workflows where a record can reach a state it cannot exit, where a required step has no implementation, or where a multi-step flow has no rollback if a later step fails
+3. Missing scenarios — edge cases and boundary conditions that the code does not handle: empty collections, null/missing required data, permission boundary cases, concurrent actions on the same record, actions at volume limits
+
+For each issue found:
+- Describe the gap in plain English
+- Identify the affected user persona and the point in their workflow where the gap occurs
+- Assess the impact: is this a silent failure, a visible error with no recovery, or a data integrity risk?
+```
+
+The output maps directly to BDD Failure Handling and Edge Case scenarios — and often reveals stories that are missing from the backlog entirely.
+
+---
+
+## Step 6: Generate Stories From Codebase Analysis
 
 Once you have the gap analysis and business rules, generate stories:
 
@@ -122,11 +144,13 @@ Domain entities: [from Step 1]
 Existing capabilities: [from Step 2]
 Identified gaps: [from Step 3]
 Business rules: [from Step 4]
+UX gaps and missing scenarios: [from Step 5]
 Product vision: [your brief]
 
 For each story:
-- Write in standard user story format (As a... I want... So that...)
-- Include acceptance criteria using Given/When/Then
+- Lead with "In order to [business goal]", then "As a [specific persona]", "I want to [action]", "So that [measurable user benefit]"
+- Write Acceptance Criteria as declarative pass/fail statements — not Given/When/Then
+- Write BDD Scenarios in Given/When/Then format with all four types: Happy Path, Validation, Edge Case, Failure Handling
 - Note any dependencies on existing capabilities
 - Flag any technical constraints surfaced in the analysis
 

@@ -19,9 +19,9 @@ Use this template to document the evaluation of a batch of user stories. Run thi
 
 | Stories | Count |
 |---|---|
-| Dev-ready (16–18) | |
-| Needs refinement (12–15) | |
-| Requires rework (< 12) | |
+| Dev-ready (grade >= 9.0) | |
+| Needs refinement (7.0–8.9) | |
+| Requires rework (grade < 7.0) | |
 | **Total** | |
 
 **Batch ready for sprint:** Yes / No / Partially (N of N stories ready)
@@ -37,15 +37,18 @@ Use this template to document the evaluation of a batch of user stories. Run thi
 | User Clarity | /3 | |
 | Business Value | /3 | |
 | AC Quality | /3 | |
+| BDD Scenarios | /3 | |
 | Story Size | /3 | |
 | Edge Cases | /3 | |
 | Dependency Clarity | /3 | |
-| **Total** | **/18** | |
+| Conciseness / NFR / Out of Scope | /3 | |
+| **Total** | **/24** | |
+| **Grade** | **/10** | |
 
-**Status:** ✅ Dev-ready / ⚠️ Needs work / ❌ Requires rework
+**Status:** ✅ Dev-ready (>= 9.0) / ⚠️ Needs work (7.0–8.9) / ❌ Requires rework (< 7.0)
 
 **Required fixes:**
-1. [specific fix — e.g., "Rewrite 'As a user' to specify role and context"]
+1. [specific fix — e.g., "Story starts with 'As a user' — rewrite to lead with 'In order to' and a specific business goal"]
 2. [specific fix]
 
 **Assigned to:** [who will make the fix]  
@@ -60,12 +63,15 @@ Use this template to document the evaluation of a batch of user stories. Run thi
 | User Clarity | /3 | |
 | Business Value | /3 | |
 | AC Quality | /3 | |
+| BDD Scenarios | /3 | |
 | Story Size | /3 | |
 | Edge Cases | /3 | |
 | Dependency Clarity | /3 | |
-| **Total** | **/18** | |
+| Conciseness / NFR / Out of Scope | /3 | |
+| **Total** | **/24** | |
+| **Grade** | **/10** | |
 
-**Status:** ✅ Dev-ready / ⚠️ Needs work / ❌ Requires rework
+**Status:** ✅ Dev-ready (>= 9.0) / ⚠️ Needs work (7.0–8.9) / ❌ Requires rework (< 7.0)
 
 **Required fixes:**
 1.
