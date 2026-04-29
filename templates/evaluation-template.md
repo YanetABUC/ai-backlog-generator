@@ -19,9 +19,9 @@ Use this template to document the evaluation of a batch of user stories. Run thi
 
 | Stories | Count |
 |---|---|
-| Dev-ready (22–24) | |
-| Needs refinement (17–21) | |
-| Requires rework (< 17) | |
+| Dev-ready (grade >= 9.0) | |
+| Needs refinement (7.0–8.9) | |
+| Requires rework (grade < 7.0) | |
 | **Total** | |
 
 **Batch ready for sprint:** Yes / No / Partially (N of N stories ready)
@@ -43,8 +43,9 @@ Use this template to document the evaluation of a batch of user stories. Run thi
 | Dependency Clarity | /3 | |
 | Conciseness / NFR / Out of Scope | /3 | |
 | **Total** | **/24** | |
+| **Grade** | **/10** | |
 
-**Status:** ✅ Dev-ready / ⚠️ Needs work / ❌ Requires rework
+**Status:** ✅ Dev-ready (>= 9.0) / ⚠️ Needs work (7.0–8.9) / ❌ Requires rework (< 7.0)
 
 **Required fixes:**
 1. [specific fix — e.g., "Story starts with 'As a user' — rewrite to lead with 'In order to' and a specific business goal"]
@@ -68,8 +69,9 @@ Use this template to document the evaluation of a batch of user stories. Run thi
 | Dependency Clarity | /3 | |
 | Conciseness / NFR / Out of Scope | /3 | |
 | **Total** | **/24** | |
+| **Grade** | **/10** | |
 
-**Status:** ✅ Dev-ready / ⚠️ Needs work / ❌ Requires rework
+**Status:** ✅ Dev-ready (>= 9.0) / ⚠️ Needs work (7.0–8.9) / ❌ Requires rework (< 7.0)
 
 **Required fixes:**
 1.

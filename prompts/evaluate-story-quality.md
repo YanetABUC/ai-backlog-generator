@@ -67,6 +67,8 @@ Score each dimension 1–3:
 
 ## Output Format for Each Story
 
+Grade formula: `round(Total / 24 × 10, 1)`
+
 **[Story Title]**
 | Dimension | Score | Issue |
 |---|---|---|
@@ -79,8 +81,9 @@ Score each dimension 1–3:
 | Dependencies | /3 | [specific issue or "meets bar"] |
 | Conciseness / NFR / Out of Scope | /3 | [specific issue or "meets bar"] |
 | **Total** | **/24** | |
+| **Grade** | **/10** | |
 
-**Status:** Dev-Ready (22–24) / Needs Refinement (17–21) / Requires Rework (below 17)
+**Status:** Dev-Ready (>= 9.0) / Needs Refinement (7.0–8.9) / Requires Rework (below 7.0)
 
 **Top 2 fixes needed:**
 1. [specific fix with example]
@@ -161,9 +164,9 @@ Evaluate the following stories and output a summary scorecard.
 
 For each story, provide:
 - Story title
-- Score per dimension (abbreviated: UC, BV, AC, BDD, SS, EC, DC, FR)
-- Total score /24
-- Status: ✅ Dev-ready / ⚠️ Needs work / ❌ Rework
+- Score per dimension (abbreviated: UC, BV, AC, BDD, SS, EC, DC, CS)
+- Total /24 and grade /10 (= round(total / 24 × 10, 1))
+- Status: ✅ Dev-ready (>= 9.0) / ⚠️ Needs work (7.0–8.9) / ❌ Rework (< 7.0)
 
 After the scorecard, list the top 3 most common issues across all stories.
 
@@ -175,13 +178,13 @@ Stories:
 
 ## Scoring Interpretation
 
-| Total Score | Status | Action |
+Grade = round(Total / 24 × 10, 1)
+
+| Grade | Status | Action |
 |---|---|---|
-| 22–24 | Dev-ready | Proceed to engineering handoff |
-| 20–21 | Minor issues | Apply targeted fixes, no full rewrite |
-| 17–19 | Moderate issues | Rewrite weak sections using refinement prompts |
-| 14–16 | Significant issues | Substantial rewrite needed |
-| Below 14 | Poor quality | Return to story generation with better context |
+| 9.0–10.0 | Dev-ready | Proceed to engineering handoff |
+| 7.0–8.9 | Needs refinement | Apply targeted fixes using refine-stories.md |
+| Below 7.0 | Requires rework | Rewrite required — return to story generation with better context |
 
 ---
 
@@ -198,10 +201,11 @@ Stories:
 | Story Size | 2/3 | Reports is a broad feature — scope unclear |
 | Edge Cases | 1/3 | No criteria = no edge cases covered |
 | Dependencies | 1/3 | Reporting data source not mentioned |
-| FR / NFR / Out of Scope | 1/3 | No functional requirements, no NFRs, no Out of Scope |
+| Conciseness / NFR / Out of Scope | 1/3 | No NFRs, no Out of Scope, no Context paragraph |
 | **Total** | **9/24** | |
+| **Grade** | **3.8/10** | |
 
-**Status:** ❌ Requires Rework
+**Status:** ❌ Requires Rework (grade 3.8 — below 7.0)
 
 **Top 2 fixes:**
 1. Rewrite to lead with a business goal and a specific persona: "In order to identify fulfillment delays before the daily shipping cutoff, As an operations manager reviewing weekly fulfillment data, I want to view a filtered report of unfulfilled orders, So that I can escalate at-risk orders before the carrier pickup window closes."
