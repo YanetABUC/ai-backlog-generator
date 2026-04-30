@@ -32,19 +32,28 @@ flowchart TD
 
     WF01 --> P1["Problem statement\nValidated epics"]
     WF02 --> P2["Journey map\nScreen analysis"]
-    WF03 --> P3["Domain model\nGap analysis"]
+    WF03 --> P3["Domain model · Gap analysis\nProduce once per feature area"]
 
     P1 & P2 & P3 --> GEN
 
-    GEN["Generate user stories\nLean template · 80-150 lines"]
+    GEN["Generate user stories\nLean template · 80–150 lines"]
 
-    GEN --> EVAL["Evaluate — Workflow 04\n8 dimensions · grade /10"]
+    GEN --> RAPID["Rapid Evaluation\nPass / fail filter"]
 
-    EVAL --> DEC{Grade >= 9 / 10?}
+    RAPID -->|Fail| GEN
+    RAPID -->|Pass| EVAL
 
-    DEC -->|No| REF["Refine\nFix persona · AC · BDD format\nRemove FR · shape prescription\nCollapse context sections"]
+    EVAL["Full Evaluation — Workflow 04\n8 dimensions · grade /10"]
+
+    EVAL --> DEC{Grade >= 9.0?}
+
+    DEC -->|No| CAP{2 refinement\npasses done?}
+
+    CAP -->|No| REF["Refine\nFix persona · AC · BDD format\nRemove FR · shape prescription\nCollapse context sections"]
 
     REF --> EVAL
+
+    CAP -->|Yes| GEN
 
     DEC -->|Yes| HAND["Dev-ready handoff\nWorkflow 05"]
 ```

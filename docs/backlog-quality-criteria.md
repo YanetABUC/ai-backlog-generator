@@ -258,9 +258,12 @@ When using AI to evaluate story quality, score each dimension 1–3:
 | 2 | Partially meets — needs a specific fix |
 | 1 | Does not meet — rewrite required |
 
-**Total score interpretation:**
-- 22–24: Dev-ready
-- 17–21: Needs targeted refinement
-- Below 17: Needs significant rework
+**Grade interpretation:** `grade = round(total / 24 × 10, 1)`
+
+| Grade | Status | Action |
+|---|---|---|
+| ≥ 9.0 | Dev-ready | Proceed to engineering handoff |
+| 7.0–8.9 | Needs refinement | Apply targeted fixes — max 2 passes |
+| Below 7.0 | Requires rework | Return to story generation with richer context |
 
 See the [evaluation template](../templates/evaluation-template.md) and [evaluate-story-quality prompt](../prompts/evaluate-story-quality.md).

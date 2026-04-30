@@ -16,6 +16,8 @@ When you're adding features to an existing system, the codebase is your most rel
 - Estimating scope for a new initiative
 - Reducing "we didn't know that existed" surprises in sprint
 
+**Cost principle:** The analysis artifacts produced in Steps 2–6 (domain model, capability map, gap analysis, business rules, risk areas) should be produced **once per feature area** and reused across all story generation sessions for that area. Regenerating them per session multiplies token cost without improving quality. Save the outputs and reference them in subsequent sessions.
+
 ---
 
 ## Prerequisites
@@ -212,7 +214,7 @@ This review typically catches 1–2 significant issues that save a sprint.
 - [ ] Stories evaluated against [quality criteria](../docs/backlog-quality-criteria.md)
 - [ ] Stories ordered with blockers first
 - [ ] Stories imported to backlog tool with domain map attached as context
-- [ ] Codebase analysis artifacts linked from the epic
+- [ ] Codebase analysis artifacts saved and linked from the epic — these are the reusable context for all future story sessions in this feature area; do not regenerate them per session
 
 ---
 

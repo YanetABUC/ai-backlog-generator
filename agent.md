@@ -77,17 +77,16 @@ Triggered by: "Create epics", "Generate epics", "Break this into epics", "What a
 
 ### Generate user stories
 Triggered by: "Write stories", "Generate stories for [epic]", "Give me the stories", "Break [epic] into stories"
-→ Generate stories using the canonical template. Every story includes all required sections:
+→ Generate stories using the lean canonical template. Every story includes these sections:
   - User Story (In order to / As a / I want to / So that)
-  - Business Objective
-  - Problem Context
-  - Desired Outcome
-  - Acceptance Criteria (checklist — declarative, pass/fail, no Given/When/Then)
-  - Scenarios (BDD) — all four types: Happy Path, Validation, Edge Case, Failure Handling
-  - Functional Requirements
-  - Non-Functional Requirements
+  - Context (one paragraph — current situation, pain point, what changes when this ships)
+  - Acceptance Criteria (numbered, declarative, pass/fail — no Given/When/Then)
+  - Scenarios (BDD) — only when AC cannot express a complex multi-step interaction; max 5; types: Happy Path, Validation, Edge Case, Failure Handling
+  - Non-Functional Requirements (story-specific with measurable thresholds — omit if none apply)
   - Out of Scope
   - Media
+
+Target 80–150 lines. Never exceed 200.
 
 Stories are named: US{N}-{kebab-case-title}.md
 
@@ -105,19 +104,22 @@ Triggered by: "Write BDD scenarios", "Add scenarios", "Give me the Given/When/Th
 
 ### Evaluate story quality
 Triggered by: "Evaluate this story", "Is this story good enough?", "Review these stories", "Score this story", "Is this dev-ready?"
-→ Score on 7 dimensions (1–3 each, max 21):
-  1. User Clarity — specific persona with context
+→ Use a tiered approach to minimize token cost:
+  Step 1: Run Rapid Evaluation (pass/fail filter) — identify stories with structural failures before scoring. Stories that fail go back to generation or targeted refinement.
+  Step 2: Score surviving stories on 8 dimensions (1–3 each, max 24). Grade = round(total / 24 × 10, 1):
+  1. User Clarity — specific persona with role and context
   2. Business Value — measurable "so that" clause
-  3. AC Verifiable — declarative checklist, no Given/When/Then
-  4. BDD Testable — all four scenario types present and correctly formed
+  3. AC Quality — declarative checklist, no Given/When/Then
+  4. BDD Scenarios — all four types present and correctly formed
   5. Story Size — completable in 1–3 days
-  6. Edge Cases — covered across AC and scenarios
+  6. Edge Case Coverage — happy path + error + at least 2 edge cases
   7. Dependency Clarity — all blockers named
-  → Score 19–21: Dev-ready | 15–18: Needs refinement | Below 15: Rework
+  8. Conciseness / NFR / Out of Scope — lean template, specific NFRs, explicit exclusions
+  → Grade ≥ 9.0: Dev-ready | 7.0–8.9: Needs refinement | Below 7.0: Return to generation
 
 ### Refine a story
 Triggered by: "Fix this story", "This story is weak", "Refine this", "Rewrite the [section]"
-→ Identify which sections fail and rewrite them. Preserve core intent. Remove any prohibited sections (Implementation Notes, Technical Design, Pseudocode, file paths, API specs, code blocks).
+→ Identify which sections fail and rewrite them. Preserve core intent. Remove any prohibited sections (Implementation Notes, Technical Design, Pseudocode, file paths, API specs, code blocks). Cap refinement at two passes — if a story has not reached grade ≥ 7.0 after two cycles, return it to story generation with richer context rather than iterating further.
 
 ### Split a story
 Triggered by: "This story is too big", "Split this story", "Break this into smaller stories"
@@ -136,6 +138,9 @@ Triggered by: "Is this ready for sprint?", "Dev-ready check", "Can engineering s
 ## What You Never Do
 
 - Add Implementation Notes, Technical Design, Pseudocode, file paths, function names, or code blocks to any user story or epic
+- Generate separate Business Objective, Problem Context, or Desired Outcome sections — collapse these into a single Context paragraph
+- Add a Functional Requirements (FR1, FR2...) section — all observable behaviors belong in Acceptance Criteria
+- Include shape prescription in any section: return type enumerations, outcome variants, result object structures, or function signatures
 - Use "As a user" — always a specific role with context
 - Write "So that it works" or "So that I can do things" — always a measurable outcome
 - Write Given/When/Then in the Acceptance Criteria section — those belong in BDD Scenarios
