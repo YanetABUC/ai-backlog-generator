@@ -32,78 +32,44 @@ Ideal batch size: 5–10 stories.
 
 ---
 
-## Step 2: Run AI Structural Evaluation
+## Step 2: Rapid Evaluation Filter
 
-**Prompt:**
-```
-You are a senior business analyst evaluating user stories before they enter a development sprint.
+Run the pass/fail filter first. Use the Rapid Evaluation variant in [evaluate-story-quality.md](../prompts/evaluate-story-quality.md) to identify stories with obvious structural failures before spending tokens on the full rubric.
 
-Evaluate each story against the following quality rubric. Score each dimension 1–3:
+Stories that fail any gate go directly to refinement or back to story generation. Do not run the full rubric on them.
 
-1. **User Clarity** (1=generic user, 2=typed user, 3=specific named persona with context)
-2. **Business Value** (1=no value stated, 2=value implied, 3=measurable outcome stated)
-3. **Acceptance Criteria Quality** (1=vague/subjective, 2=mostly testable, 3=all Given/When/Then, all pass/fail)
-4. **Story Size** (1=too large for one sprint, 2=borderline, 3=completable in 1–3 days)
-5. **Edge Cases** (1=happy path only, 2=some edge cases, 3=happy + error + edge cases covered)
-6. **Dependency Clarity** (1=dependencies unknown, 2=some identified, 3=all dependencies explicit)
-
-For each story:
-- Assign a score per dimension
-- Calculate total (max 18)
-- Flag each dimension scoring below 2
-- For each flagged dimension, provide a specific fix (not generic advice)
-
-Scoring interpretation:
-- 16–18: Dev-ready
-- 12–15: Minor refinement needed
-- Below 12: Significant rework required
-
-Stories to evaluate:
-[paste stories]
-
-Context (product/domain):
-[brief description of product and users]
-```
+Stories that pass all gates move to Step 3.
 
 ---
 
-## Step 3: Review Scores and Prioritize Fixes
+## Step 3: Run Full 8-Dimension Evaluation
+
+For stories that passed the Rapid Evaluation filter, run the full scored evaluation using the Core Evaluation Prompt in [evaluate-story-quality.md](../prompts/evaluate-story-quality.md).
+
+Scoring: grade = round(Total / 24 × 10, 1)
+
+- Grade ≥ 9.0: Dev-ready — proceed to human review
+- Grade 7.0–8.9: Needs refinement — apply targeted fixes using [refine-stories.md](../prompts/refine-stories.md)
+- Grade below 7.0: Requires rework — return to story generation with better context
+
+---
+
+## Step 4: Review Scores and Prioritize Fixes
 
 After AI evaluation:
 
-1. Sort stories by score (lowest first)
-2. Stories scoring below 12 — rewrite before proceeding
-3. Stories scoring 12–15 — apply targeted fixes using the AI's recommendations
-4. Stories scoring 16–18 — proceed to human review
+1. Sort stories by grade (lowest first)
+2. Stories below 7.0 — return to story generation; do not attempt to refine a weak draft
+3. Stories graded 7.0–8.9 — apply targeted fixes using the refinement prompt
+4. Stories graded 9.0+ — proceed to human review
 
-**Don't fix every story manually.** For stories below 12, use the refinement prompt:
-
-```
-Rewrite the following user story to improve its quality. 
-
-The story scored low on: [list dimensions with low scores]
-Specific issues identified: [paste AI feedback]
-
-Rewrite requirements:
-- Keep the core intent
-- Make the user persona specific
-- Make the business value measurable
-- Convert acceptance criteria to Given/When/Then format
-- Add at least 2 edge cases
-- Identify any dependencies
-
-Original story:
-[paste story]
-
-Domain context:
-[paste product context]
-```
+**Refinement cap: two passes per story.** If a story has not reached grade ≥ 7.0 after two refinement cycles, stop iterating and return it to story generation with richer input context. See [refine-stories.md](../prompts/refine-stories.md) for the iteration limit rule.
 
 See also: [refine-stories.md](../prompts/refine-stories.md)
 
 ---
 
-## Step 4: Human Business Accuracy Review
+## Step 5: Human Business Accuracy Review
 
 AI evaluates structure. Humans evaluate accuracy. For each story, a PM or BA confirms:
 
@@ -120,7 +86,7 @@ Correct any inaccuracies before moving to engineering review.
 
 ---
 
-## Step 5: Technical Feasibility Review
+## Step 6: Technical Feasibility Review
 
 For stories that passed AI and human review, have a senior engineer perform a quick scan:
 
@@ -135,7 +101,7 @@ Capture feedback in the story's technical notes field. Adjust acceptance criteri
 
 ---
 
-## Step 6: Edge Case Completeness Check
+## Step 7: Edge Case Completeness Check
 
 Run a dedicated edge case check on stories that passed all prior reviews:
 
@@ -166,12 +132,12 @@ Add the relevant edge cases to the story's acceptance criteria. Not every edge c
 
 ---
 
-## Step 7: Final Quality Gate
+## Step 8: Final Quality Gate
 
 Before marking a story as "Ready":
 
 ```
-[ ] Total evaluation score 16+/18
+[ ] Grade ≥ 9.0/10 on 8-dimension rubric
 [ ] Business accuracy confirmed by PM/BA
 [ ] Technical feasibility confirmed by engineering
 [ ] All edge cases covered in acceptance criteria
@@ -196,7 +162,7 @@ Evaluator: [name]
 
 | Story | Score | Status | Key Issues |
 |---|---|---|---|
-| [story title] | /18 | Ready / Needs work | |
+| [story title] | /10 | Dev-ready / Needs refinement / Rework | |
 
 Issues found:
 - [issue]

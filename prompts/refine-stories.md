@@ -13,6 +13,12 @@ Use this prompt to improve an existing user story that has been flagged during e
 
 ---
 
+## Iteration Limit
+
+Cap refinement at **two passes per story**. If a story has not reached grade ≥ 7.0 after two cycles, do not iterate further — return it to story generation with richer input context: a more specific persona, an updated domain model, or better-defined business rules. A draft that keeps failing evaluation is a context problem, not a wording problem.
+
+---
+
 ## Core Prompt
 
 ```
