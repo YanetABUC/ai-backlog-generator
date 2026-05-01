@@ -1,0 +1,15 @@
+{
+  "jira": {
+    "baseUrl": "https://yourcompany.atlassian.net",
+    "projectKey": "PROJ",
+    "email": "you@yourcompany.com",
+    "projectType": "next-gen",
+    "issueTypes": {
+      "Epic": "Epic",
+      "US": "Story",
+      "BUG": "Bug",
+      "SPK": "Story",
+      "TSK": "Task"
+    }
+  }
+}

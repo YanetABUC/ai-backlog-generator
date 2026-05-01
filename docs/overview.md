@@ -2,7 +2,7 @@
 
 ## The Problem With Traditional Backlog Creation
 
-Traditional backlog creation has a handoff problem. Discovery happens in one room, story writing happens in another, and by the time engineering sees the ticket, critical context has been lost. The result: stories that need clarification, sprints that stall, and PMs stuck in meetings that should have been a comment.
+Traditional backlog creation has a handoff problem. Discovery happens in one room, story writing happens in another, and by the time engineering sees the ticket, critical context has been lost. The result: items that need clarification, sprints that stall, and PMs stuck in meetings that should have been a comment.
 
 AI doesn't fix this by itself. But used correctly, it compresses the gap between discovery and delivery — if you have the right workflow.
 
@@ -10,52 +10,66 @@ AI doesn't fix this by itself. But used correctly, it compresses the gap between
 
 ## How This Framework Works
 
-The AI Backlog Generator framework is organized around five stages:
+The AI Backlog Generator framework is organized around six stages:
 
 ```
-Discovery → Validation → Generation → Evaluation → Handoff
+Discovery → Validation → Generation → Evaluation → Handoff → Sync
 ```
 
-Each stage has its own workflow, prompts, and quality gates. You don't have to use all five — start where you have the most friction.
+Each stage has its own workflow, prompts, quality gates, and Claude Code skills. You don't have to use all six — start where you have the most friction.
 
 ---
 
-## Workflow Diagram
+## What Gets Generated
+
+This framework produces four types of backlog items, each with its own template and quality rubric:
+
+| Type | Prefix | Format |
+|---|---|---|
+| **Epic** | EP | 10-section format: Narrative, Strategic Context, Desired Transformation, Scope, Target Users, Functional Expectations, NFRs, Constraints, Dependencies, Success Metrics |
+| **User Story** | US | In order to / As a / I want to / So that + Context + AC + BDD Scenarios + NFRs + Out of Scope |
+| **Bug** | BUG | Summary + Steps to Reproduce + Expected vs. Actual + Severity + Fix AC + Out of Scope |
+| **Spike** | SPK | Investigation Question + Context + Timebox + Expected Output + Definition of Done |
+| **Task** | TSK | Description + AC + Dependencies + Out of Scope |
+
+Every item is saved as a markdown file with a globally unique ID. Items move through status folders as they progress through the pipeline.
+
+---
+
+## Full Pipeline Diagram
 
 ```mermaid
 flowchart TD
     subgraph entry["Choose your entry point"]
-        WF01["Workflow 01\nDiscovery"]
-        WF02["Workflow 02\nPrototype"]
-        WF03["Workflow 03\nCodebase"]
+        WF01["/backlog:discovery-to-backlog\nDiscovery notes · product brief"]
+        WF02["Workflow 02\nPrototype · wireframes"]
+        WF03["/backlog:codebase-to-backlog\nExisting codebase · gap analysis"]
     end
 
-    WF01 --> P1["Problem statement\nValidated epics"]
-    WF02 --> P2["Journey map\nScreen analysis"]
-    WF03 --> P3["Domain model · Gap analysis\nProduce once per feature area"]
+    WF01 & WF02 & WF03 --> GEN
 
-    P1 & P2 & P3 --> GEN
+    GEN["/backlog:generate-items\nUS · BUG · SPK · TSK\nSaved → backlog-items/draft/"]
 
-    GEN["Generate user stories\nLean template · 80–150 lines"]
-
-    GEN --> RAPID["Rapid Evaluation\nPass / fail filter"]
+    GEN --> RAPID["Rapid quality gate\nPass / fail filter on 14 criteria"]
 
     RAPID -->|Fail| GEN
     RAPID -->|Pass| EVAL
 
-    EVAL["Full Evaluation — Workflow 04\n8 dimensions · grade /10"]
+    EVAL["/backlog:evaluate-item ID\nFull rubric · grade /10\nReport saved → reports/\nMoved → backlog-items/in-review/"]
 
-    EVAL --> DEC{Grade >= 9.0?}
+    EVAL --> DEC{Grade ≥ 9.0?}
 
     DEC -->|No| CAP{2 refinement\npasses done?}
 
-    CAP -->|No| REF["Refine\nFix persona · AC · BDD format\nRemove FR · shape prescription\nCollapse context sections"]
+    CAP -->|No| REF["/backlog:refine-item ID\nFix persona · AC · BDD\nRemove FR · shape prescription\nUpdated in place"]
 
     REF --> EVAL
 
     CAP -->|Yes| GEN
 
-    DEC -->|Yes| HAND["Dev-ready handoff\nWorkflow 05"]
+    DEC -->|Yes| HAND["/backlog:dev-ready-handoff ID\nChecklist · gap detection\nTechnical context block\nMoved → backlog-items/ready/"]
+
+    HAND --> JIRA["/backlog:jira-push ID\nCreate or update Jira issue\nConflict detection on update\nMoved → backlog-items/uploaded/"]
 ```
 
 ---
@@ -64,15 +78,11 @@ flowchart TD
 
 **Goal:** Extract structured product intent from raw input.
 
-Raw input can be:
-- A meeting transcript
-- A product brief
-- A set of wireframes
-- An existing codebase
-- A competitor analysis
-- A support ticket cluster
+Raw input can be a meeting transcript, a product brief, wireframes, an existing codebase, a competitor analysis, or a support ticket cluster.
 
 AI transforms raw input into structured output: problem statement, user segments, job-to-be-done, constraints, and success metrics.
+
+**Claude Code skill:** `/backlog:discovery-to-backlog` — guides through discovery questions, confirms the problem statement, generates and saves epics and backlog items with IDs.
 
 **Key document:** [Discovery → Backlog Workflow](../workflows/01-discovery-to-backlog.md)
 
@@ -80,9 +90,9 @@ AI transforms raw input into structured output: problem statement, user segments
 
 ## Stage 2: Validation (Fast Feedback Loop)
 
-**Goal:** Confirm assumptions before investing in story writing.
+**Goal:** Confirm assumptions before investing in item writing.
 
-This is the most skipped and most valuable stage. Before writing a single user story, validate:
+This is the most skipped and most valuable stage. Before writing a single backlog item, validate:
 - Is the problem real?
 - Is the solution direction right?
 - Are there hidden constraints from the codebase or architecture?
@@ -96,15 +106,15 @@ AI accelerates this by generating validation questions, identifying assumption g
 
 ## Stage 3: Generation
 
-**Goal:** Produce structured epics, stories, and acceptance criteria.
+**Goal:** Produce structured epics and backlog items with IDs, saved to the local pipeline.
 
-With validated context, AI generates:
-- Epics with clear business goals
-- User stories in the right granularity
-- Acceptance criteria that are testable and complete
-- Edge cases that are often missed
+With validated context, AI generates items appropriate to the work type — user stories for new capabilities, bugs for defects, spikes for investigations, tasks for technical prerequisites. All items are saved to `backlog/backlog-items/draft/` with a globally unique ID and YAML frontmatter tracking their status and Jira key.
 
-The key is feeding AI the right context — not just "build a login page" but the business goal, user segment, technical constraints, and definition of done.
+**Claude Code skills:**
+- `/backlog:generate-epics` — epics saved to `backlog/epics/draft/`
+- `/backlog:generate-items` — US, BUG, SPK, or TSK saved to `backlog/backlog-items/draft/`
+- `/backlog:generate-ac` — adds AC and BDD to an existing item by ID
+- `/backlog:generate-bdd` — adds BDD scenarios to an existing item by ID
 
 **Key documents:**
 - [Generate Epics Prompt](../prompts/generate-epics.md)
@@ -115,15 +125,30 @@ The key is feeding AI the right context — not just "build a login page" but th
 
 ## Stage 4: Evaluation
 
-**Goal:** Ensure every story meets the quality bar before it enters a sprint.
+**Goal:** Ensure every item meets the quality bar before it enters a sprint.
 
-AI evaluates stories against a quality rubric:
-- Is the user and their goal clear?
-- Is the business value explicit?
-- Are acceptance criteria testable?
-- Is the story the right size?
-- Are edge cases covered?
-- Could an engineer build this without a follow-up?
+Items are referenced by ID — no copy-pasting. The evaluation rubric varies by item type:
+
+**User Stories** are scored on 8 dimensions (1–3 each, grade out of 10):
+1. User Clarity
+2. Business Value
+3. Acceptance Criteria Quality
+4. BDD Scenarios
+5. Story Size
+6. Edge Case Coverage
+7. Dependency Clarity
+8. Conciseness / NFRs / Out of Scope
+
+Grade ≥ 9.0 = Dev-Ready · 7.0–8.9 = Needs Refinement · < 7.0 = Requires Rework
+
+**Bugs** are evaluated on 6 pass/fail gates. **Spikes** on 4 gates. **Tasks** on 3 gates.
+
+The evaluation report is saved to `backlog/reports/` and linked in the item's frontmatter. The item moves to `backlog/backlog-items/in-review/`.
+
+**Claude Code skills:**
+- `/backlog:evaluate-item {ID}` — full evaluation by ID or Jira link
+- `/backlog:identify-edge-cases {ID}` — surfaces missing edge cases by category
+- `/backlog:audit-items` — rapid 14-gate pass/fail across a full backlog
 
 **Key documents:**
 - [Story Evaluation Workflow](../workflows/04-story-evaluation.md)
@@ -136,29 +161,108 @@ AI evaluates stories against a quality rubric:
 
 **Goal:** Get to zero-ambiguity before sprint planning.
 
-Dev-ready means:
+Dev-ready means an engineer can pick up the item and start building without scheduling a meeting:
 - No open questions
-- Dependencies identified
+- Dependencies identified and linked
 - Technical constraints documented
-- Acceptance criteria cover happy path + edge cases
+- AC covers happy path + error states + edge cases
 - Definition of Done is explicit
+
+The handoff report is saved to `backlog/reports/` and linked in the item's frontmatter. The item moves to `backlog/backlog-items/ready/`.
+
+**Claude Code skills:**
+- `/backlog:dev-ready-handoff {ID}` — checklist + gap detection + technical context block + kickoff note
+- `/backlog:sprint-prep` — combined evaluation + handoff across a full sprint set
+- `/backlog:refine-item {ID}` — targeted rewrite of items that need fixes (2-pass cap)
+- `/backlog:split-item {ID}` — breaks oversized stories into sprint-sized items
 
 **Key document:** [Dev-Ready Handoff Workflow](../workflows/05-dev-ready-handoff.md)
 
 ---
 
-## Choosing Your Entry Point
+## Stage 6: Sync
 
-| Starting point | Go to |
-|---|---|
-| Discovery notes / product brief | [Workflow 01](../workflows/01-discovery-to-backlog.md) |
-| Prototype or wireframes | [Workflow 02](../workflows/02-prototype-to-stories.md) |
-| Existing codebase | [Workflow 03](../workflows/03-codebase-to-backlog.md) |
-| Draft stories needing review | [Workflow 04](../workflows/04-story-evaluation.md) |
-| Stories ready for sprint | [Workflow 05](../workflows/05-dev-ready-handoff.md) |
+**Goal:** Push dev-ready items to Jira, maintaining a single source of truth.
+
+Once items reach `ready/` status, they are pushed to Jira via the REST API. The skill handles:
+- **Create:** new Jira issue with summary, description (converted from markdown), and issue type
+- **Update:** conflict detection compares Jira's last-modified timestamp against the local `jira_synced_at` field — asks before overwriting if someone edited the ticket after the last sync
+- **Epic push:** automatically creates and links all `ready` child items under the epic in Jira
+
+After a successful push, the `jira_key` and `jira_synced_at` are written into the item's frontmatter. The file moves to `backlog/backlog-items/uploaded/`.
+
+Reference items by their local ID or Jira link in any subsequent skill:
+
+```
+/backlog:evaluate-item https://company.atlassian.net/browse/PROJ-42
+```
+
+**Claude Code skills:**
+- `/backlog:jira-config` — set up connection, verify live API call
+- `/backlog:jira-push {ID}` — create or update; `EP-001` pushes the epic and all linked ready children
 
 ---
 
-## Backlog Tracker
+## Choosing Your Entry Point
 
-Generated stories can be exported to any backlog tool — Linear, Jira, GitHub Issues, or Shortcut. The framework produces markdown artifacts; how you import them depends on your team's tooling.
+| Starting point | Claude Code skill | Manual workflow |
+|---|---|---|
+| Discovery notes / product brief | `/backlog:discovery-to-backlog` | [Workflow 01](../workflows/01-discovery-to-backlog.md) |
+| Prototype or wireframes | `/backlog:generate-items` after screen analysis | [Workflow 02](../workflows/02-prototype-to-stories.md) |
+| Existing codebase | `/backlog:codebase-to-backlog` | [Workflow 03](../workflows/03-codebase-to-backlog.md) |
+| Items needing review | `/backlog:audit-items` or `/backlog:evaluate-item {ID}` | [Workflow 04](../workflows/04-story-evaluation.md) |
+| Items ready for sprint | `/backlog:sprint-prep` | [Workflow 05](../workflows/05-dev-ready-handoff.md) |
+| Items ready for Jira | `/backlog:jira-push {ID}` | — |
+
+---
+
+## The Local File Pipeline
+
+All items are tracked in `backlog/counter.json` — a global registry that maps every ID to its current file path, status, type, title, and Jira key.
+
+```
+backlog/
+├── epics/
+│   ├── draft/        ← generate-epics writes here
+│   └── ready/        ← dev-ready-handoff moves epics here
+├── backlog-items/
+│   ├── draft/        ← generate-items writes here
+│   ├── in-review/    ← evaluate-item moves items here
+│   ├── refined/      ← optional manual staging
+│   ├── ready/        ← dev-ready-handoff moves items here
+│   └── uploaded/     ← jira-push moves items after sync
+└── reports/          ← evaluation and handoff reports
+```
+
+Every item file uses YAML frontmatter to track its lifecycle:
+
+```yaml
+---
+id: US-003
+type: Story
+title: "Manager approves a PO suggestion"
+status: ready
+epic: EP-001
+jira_key: PROJ-42
+jira_synced_at: 2026-05-01T14:32:00Z
+reports:
+  evaluation: backlog/reports/US-003-eval-2026-05-01.md
+  handoff: backlog/reports/US-003-handoff-2026-05-01.md
+---
+```
+
+Report links are local only and never sent to Jira.
+
+---
+
+## Using Claude Code Skills vs. Manual Prompts
+
+Both modes are supported and produce the same quality output.
+
+| Mode | Best for | How to use |
+|---|---|---|
+| **Claude Code skills** | Teams working inside a repository, referencing items by ID, pushing to Jira | `.claude/commands/backlog/` — invoke with `/backlog:{skill}` |
+| **Manual prompts** | One-off generation, teams not using Claude Code, any AI tool | `prompts/` folder — copy into any AI chat |
+| **Conversational agent** | Exploratory work, mixed tasks in one session | Load `agent.md` into Claude Projects, ChatGPT, or Cursor |
+
+See [Claude Code Skills](../docs/claude-code-skills.md) for the full skill reference.
