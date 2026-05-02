@@ -43,6 +43,39 @@ Synthesize the answers into a structured problem statement:
 
 Present to the user and ask: "Does this capture the problem correctly? Corrections before we move to epics?"
 
+Once confirmed, save the discovery record:
+
+1. Create a slug from the initiative name: lowercase, hyphens, max 5 words
+2. Write `backlog/discovery/{YYYY-MM-DD}-{slug}.md` with this structure:
+
+```markdown
+---
+type: Discovery
+title: "{Initiative name}"
+date: {YYYY-MM-DD}
+workflow: discovery-to-backlog
+epics: []
+---
+
+# Discovery: {Initiative name}
+
+## Problem Statement
+**Who:** [specific user — role + context]
+**Struggles with:** [pain point]
+**Current workaround:** [how they cope today]
+**Impact:** [cost of the problem]
+**Solution opportunity:** [capability that would change this]
+**Success looks like:** [measurable outcome]
+
+## Open Questions
+[Any items from Stage 1 that were flagged as unknown or assumed — list each as a question to resolve]
+
+## Plan
+*To be completed after epics are generated.*
+```
+
+Tell the user: "Discovery record saved at `backlog/discovery/{YYYY-MM-DD}-{slug}.md`."
+
 ---
 
 ## Stage 3: Epic Generation and Save
@@ -120,8 +153,27 @@ Tell the user: "Use `/backlog:evaluate-item {ID}` for a full scorecard on any it
 
 ## Completion
 
-When all items are created:
-> "Your backlog is saved and registered. Next steps:
+Update the discovery record at `backlog/discovery/{YYYY-MM-DD}-{slug}.md`:
+1. Set `epics: [{EP-001}, {EP-002}, ...]` in the frontmatter
+2. Replace the `## Plan` placeholder with:
+
+```markdown
+## Plan
+
+### Epics Generated
+| ID | Title | Priority |
+|---|---|---|
+| {EP-001} | {Title} | {1 / 2 / 3} |
+
+### Suggested Work Order
+[Brief rationale for the sequence — which epic unblocks others, which delivers fastest value]
+
+### What Was Descoped
+[Anything raised during discovery that was explicitly excluded and why]
+```
+
+Tell the user:
+> "Your backlog is saved and registered. Discovery record updated at `backlog/discovery/{YYYY-MM-DD}-{slug}.md`. Next steps:
 > 1. `/backlog:evaluate-item {ID}` — score each story
 > 2. `/backlog:refine-item {ID}` — fix any below 9.0
 > 3. `/backlog:dev-ready-handoff {ID}` — final pre-sprint check

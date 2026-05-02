@@ -33,6 +33,42 @@ From the product description, identify and list:
 
 Present to the user and ask: "Does this capture how the current product works? Corrections before we look for gaps?"
 
+Once confirmed, create the discovery record:
+
+1. Create a slug from the feature area name: lowercase, hyphens, max 5 words
+2. Write `backlog/discovery/{YYYY-MM-DD}-{slug}.md` with this structure:
+
+```markdown
+---
+type: Discovery
+title: "{Feature area name}"
+date: {YYYY-MM-DD}
+workflow: codebase-to-backlog
+epics: []
+---
+
+# Discovery: {Feature area name}
+
+## Domain Model
+
+### Entities
+[entity list with states]
+
+### Business Rules
+[rules already enforced]
+
+### Actors
+[roles and what they can do today]
+
+## Gap Analysis
+*To be completed after Stage 2.*
+
+## Plan
+*To be completed after epics are generated.*
+```
+
+Tell the user: "Discovery record created at `backlog/discovery/{YYYY-MM-DD}-{slug}.md`."
+
 ---
 
 ## Stage 2: Gap Analysis
@@ -49,6 +85,27 @@ Compare current capabilities against the product vision:
 - [Scenario] has no defined behavior — user expectation: [expected]
 
 Present and ask: "Mark each gap as High / Medium / Low priority."
+
+Once the user has assigned priorities, update the discovery record at `backlog/discovery/{YYYY-MM-DD}-{slug}.md` — replace the `## Gap Analysis` placeholder with:
+
+```markdown
+## Gap Analysis
+
+### Missing Capabilities
+| Gap | Impacts | Business Cost | Priority |
+|---|---|---|---|
+| [gap] | [role] | [impact] | High / Med / Low |
+
+### Broken Processes and Workarounds
+| Flow | Breaks When | Current Workaround | Priority |
+|---|---|---|---|
+| [flow] | [condition] | [workaround] | High / Med / Low |
+
+### UX and Scenario Gaps
+| Scenario | Missing Behavior | User Expectation | Priority |
+|---|---|---|---|
+| [scenario] | [gap] | [expected] | High / Med / Low |
+```
 
 ---
 
@@ -112,6 +169,25 @@ Run a rapid quality check inline. Flag any item that:
 - Contains implementation details
 - Has a Functional Requirements section
 
-Tell the user: "Run `/backlog:evaluate-item {ID}` for a full quality scorecard, and `/backlog:dev-ready-handoff {ID}` before sprint planning."
+Update the discovery record at `backlog/discovery/{YYYY-MM-DD}-{slug}.md`:
+1. Set `epics: [{EP-001}, {EP-002}, ...]` in the frontmatter
+2. Replace the `## Plan` placeholder with:
+
+```markdown
+## Plan
+
+### Epics Generated
+| ID | Title | Gaps Addressed | Priority |
+|---|---|---|---|
+| {EP-001} | {Title} | [gap IDs or descriptions] | {1 / 2 / 3} |
+
+### Suggested Work Order
+[Rationale for the sequence — which epic unblocks others, which addresses the highest-priority gaps]
+
+### What Was Descoped
+[Medium/Low gaps not included in this backlog and the reason]
+```
+
+Tell the user: "Run `/backlog:evaluate-item {ID}` for a full quality scorecard, and `/backlog:dev-ready-handoff {ID}` before sprint planning. Discovery record updated at `backlog/discovery/{YYYY-MM-DD}-{slug}.md`."
 
 When items are ready: "Run `/backlog:jira-push {EPIC_ID}` to push the epic and all ready child items to Jira at once."

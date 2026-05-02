@@ -18,15 +18,16 @@ Wait for their response. Detect intent and route accordingly.
 | What they say | Skill logic to apply | File behavior |
 |---|---|---|
 | "Write epics" / "have a brief" | `generate-epics.md` | Saves to `backlog/epics/draft/` |
-| "Write items" / "break this epic into stories" | `generate-items.md` | Saves to `backlog/backlog-items/draft/` |
+| "Write items" / "break this epic into stories" | Read the epic file, then scan `backlog/discovery/` for any record whose `epics` frontmatter includes this epic ID — if found, read it for context before applying `generate-items.md` logic | Saves to `backlog/backlog-items/draft/` |
 | "Write AC" / "acceptance criteria for US-003" | `generate-ac.md` | Updates item file in place |
 | "Write BDD" / "scenarios for US-003" | `generate-bdd.md` | Updates item file in place |
 | "Evaluate US-003" / "score this story" | `evaluate-item.md` | Reads file, writes report, moves to `in-review/` |
 | "Refine US-003" / "fix the issues" | `refine-item.md` | Reads file, updates in place |
 | "Split US-003" / "too big" | `split-item.md` | Reads file, writes new files |
 | "Edge cases for US-003" | `identify-edge-cases.md` | Reads file, optionally updates AC |
-| "Starting from scratch" / "discovery" | `discovery-to-backlog.md` | Saves all outputs |
-| "Existing product" / "what's missing" | `codebase-to-backlog.md` | Saves all outputs |
+| "Starting from scratch" / "discovery" | `discovery-to-backlog.md` | Saves all outputs including discovery record to `backlog/discovery/` |
+| "Existing product" / "what's missing" | `codebase-to-backlog.md` | Saves all outputs including discovery record to `backlog/discovery/` |
+| "Validate assumptions" / "fast feedback loop" / "are we solving the right problem?" | Extract assumptions from raw input, score each by risk (High/Med/Low), recommend validation method per assumption, update direction. Save to `backlog/discovery/{YYYY-MM-DD}-{slug}-assumptions.md` | Saves to `backlog/discovery/` |
 | "Is US-003 ready for dev?" / "handoff" | `dev-ready-handoff.md` | Reads file, writes report, moves to `ready/` |
 | "Audit the backlog" / "check all stories" | `audit-items.md` | Reads from counter.json index |
 | "Sprint planning" / "get ready for sprint" | `sprint-prep.md` | Reads folder, saves reports, moves to `ready/` |
@@ -56,6 +57,21 @@ Maintain context throughout the conversation:
 - If an item was evaluated and scored, reference that score when refining
 - If multiple items were generated, track which are dev-ready vs. need work
 - If the user says "next" or "do the same for this one," apply the last-used skill logic to the next item
+
+### Discovery Context
+
+Whenever you are about to generate or refine stories for an epic, check for a discovery record first:
+
+1. Read `backlog/counter.json` to find the epic file path, then read the epic file
+2. Scan all files in `backlog/discovery/` — for each, read its frontmatter and check if the `epics` field includes this epic ID
+3. If a discovery record is found, read it fully and use it as grounding context:
+   - **Problem Statement** — informs the "In order to" and "So that" of each story
+   - **Gap Analysis / Broken Processes** — informs which scenarios and edge cases matter most
+   - **Open Questions** — surfaces assumptions that may still need resolution
+   - **Plan** — confirms scope and what was deliberately descoped
+4. If no discovery record exists, proceed with the epic content alone
+
+Never ask the user to re-explain context that is already in a discovery record. If a discovery record exists, say: "I found the discovery record for this initiative — using it as context." If relevant open questions remain in that record, surface them before generating.
 
 ---
 
