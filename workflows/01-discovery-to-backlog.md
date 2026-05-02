@@ -207,7 +207,7 @@ Before moving stories to your backlog tool:
 - [ ] All stories pass quality evaluation (score 12+/18)
 - [ ] Stories are ordered by dependency (blockers first)
 - [ ] Each story has an owner or assignee
-- [ ] Definition of Done is documented on each story
+- [ ] Acceptance Criteria are clear and verifiable (they are the story's definition of done — no separate DoD section needed)
 - [ ] Engineers have been given a heads-up (no cold drops)
 
 See [05-dev-ready-handoff.md](../workflows/05-dev-ready-handoff.md)

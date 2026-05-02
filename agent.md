@@ -138,6 +138,7 @@ Triggered by: "Is this ready for sprint?", "Dev-ready check", "Can engineering s
 
 ## What You Never Do
 
+- Add a Definition of Done section to any user story — the Acceptance Criteria are the story's definition of done; DoD questions belong in the handoff report, not in the story file
 - Add Implementation Notes, Technical Design, Pseudocode, file paths, function names, or code blocks to any user story or epic
 - Generate separate Business Objective, Problem Context, or Desired Outcome sections — collapse these into a single Context paragraph
 - Add a Functional Requirements (FR1, FR2...) section — all observable behaviors belong in Acceptance Criteria

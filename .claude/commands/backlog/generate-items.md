@@ -124,7 +124,7 @@ Given / When / Then — confirm data preserved and user can retry
 - Design: [Figma link or TBD]
 ```
 
-Rules: no FR sections, no implementation details, no shape prescription. "So that" must be measurable. Persona must be role + context.
+Rules: no FR sections, no implementation details, no shape prescription, no Definition of Done section. "So that" must be measurable. Persona must be role + context. The AC items are the story's definition of done — do not add a separate DoD section to the file.
 
 ---
 
