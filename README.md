@@ -189,6 +189,7 @@ ai-backlog-generator/
 │           ├── identify-edge-cases.md
 │           ├── discovery-to-backlog.md
 │           ├── codebase-to-backlog.md
+│           ├── market-analysis.md
 │           ├── dev-ready-handoff.md
 │           ├── audit-items.md
 │           ├── sprint-prep.md
@@ -225,7 +226,8 @@ ai-backlog-generator/
 │   ├── 02-prototype-to-stories.md         ← From Figma or wireframe → stories
 │   ├── 03-codebase-to-backlog.md          ← From existing codebase → gap-based backlog
 │   ├── 04-story-evaluation.md             ← Quality review before sprint
-│   └── 05-dev-ready-handoff.md           ← Zero-ambiguity handoff to engineering
+│   ├── 05-dev-ready-handoff.md           ← Zero-ambiguity handoff to engineering
+│   └── 06-market-analysis.md             ← Competitive research → prioritized gaps → epics
 │
 ├── prompts/                               ← Use directly without Claude Code
 │   ├── generate-epics.md
@@ -235,7 +237,8 @@ ai-backlog-generator/
 │   ├── refine-stories.md
 │   ├── split-stories.md
 │   ├── identify-edge-cases.md
-│   └── evaluate-story-quality.md
+│   ├── evaluate-story-quality.md
+│   └── market-analysis.md
 │
 ├── examples/
 │   ├── sample-product-brief.md

@@ -218,6 +218,7 @@ Reference items by their local ID or Jira link in any subsequent skill:
 | Discovery notes / product brief | `/backlog:discovery-to-backlog` | [Workflow 01](../workflows/01-discovery-to-backlog.md) |
 | Prototype or wireframes | `/backlog:generate-items` after screen analysis | [Workflow 02](../workflows/02-prototype-to-stories.md) |
 | Existing codebase | `/backlog:codebase-to-backlog` | [Workflow 03](../workflows/03-codebase-to-backlog.md) |
+| Competitor research / market data | `/backlog:market-analysis` | [Workflow 06](../workflows/06-market-analysis.md) |
 | Items needing review | `/backlog:audit-items` or `/backlog:evaluate-item {ID}` | [Workflow 04](../workflows/04-story-evaluation.md) |
 | Items ready for sprint | `/backlog:sprint-prep` | [Workflow 05](../workflows/05-dev-ready-handoff.md) |
 | Items ready for Jira | `/backlog:jira-push {ID}` | — |

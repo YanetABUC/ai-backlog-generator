@@ -27,6 +27,7 @@ Wait for their response. Detect intent and route accordingly.
 | "Edge cases for US-003" | `identify-edge-cases.md` | Reads file, optionally updates AC |
 | "Starting from scratch" / "discovery" | `discovery-to-backlog.md` | Saves all outputs including discovery record to `backlog/discovery/` |
 | "Existing product" / "what's missing" | `codebase-to-backlog.md` | Saves all outputs including discovery record to `backlog/discovery/` |
+| "Market research" / "competitive analysis" / "compare with competitors" / "what are competitors doing" | `market-analysis.md` — structured competitive analysis with human review gate before any epic action | Saves analysis to `backlog/discovery/`; writes or refines epics only after human confirms |
 | "Validate assumptions" / "fast feedback loop" / "are we solving the right problem?" | Extract assumptions from raw input, score each by risk (High/Med/Low), recommend validation method per assumption, update direction. Save to `backlog/discovery/{YYYY-MM-DD}-{slug}-assumptions.md` | Saves to `backlog/discovery/` |
 | "Is US-003 ready for dev?" / "handoff" | `dev-ready-handoff.md` | Reads file, writes report, moves to `ready/` |
 | "Audit the backlog" / "check all stories" | `audit-items.md` | Reads from counter.json index |

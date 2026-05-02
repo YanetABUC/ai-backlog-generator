@@ -1,6 +1,6 @@
 # Claude Code Skills for Backlog Generation
 
-This framework ships with 16 Claude Code skills that turn prompts, templates, and quality standards into one-line commands. Skills read and write files automatically — you reference items by ID or Jira link, never by copy-pasting content.
+This framework ships with 17 Claude Code skills that turn prompts, templates, and quality standards into one-line commands. Skills read and write files automatically — you reference items by ID or Jira link, never by copy-pasting content.
 
 ---
 
@@ -97,7 +97,7 @@ Copy the `.claude/commands/backlog/` folder into your project root. Also copy th
 
 ---
 
-## The 16 Skills
+## The 17 Skills
 
 ---
 
@@ -310,6 +310,30 @@ Analyzes an existing product description, identifies capability gaps, and genera
 
 ---
 
+#### `/backlog:market-analysis`
+
+Structures competitive market research into a prioritized gap analysis and saves a discovery record. Waits for human review before deciding whether to write new epics or refine existing ones.
+
+**When to use:** You have competitor data, user reviews, pricing comparisons, or analyst reports and want to turn them into actionable backlog decisions.
+
+**Inline (paste raw research):**
+```
+/backlog:market-analysis [paste competitor notes, reviews, or brief]
+```
+
+**Conversational:**
+```
+/backlog:market-analysis
+```
+
+**Stages:** Scope Definition → Capability Comparison + User Perception + Positioning Analysis → Strategic Gap Identification + Save Discovery Record → **Human Review Gate** → Write New Epics or Refine Existing Epics or Save Only → Update Discovery Record with Plan
+
+**Human review gate:** After saving the analysis, the skill presents a summary and asks what to do next. It does not generate or modify epics until you confirm the direction. Options: write new epics from identified gaps, refine existing epics with competitive context, or save the analysis as context only.
+
+**Output:** Discovery record saved to `backlog/discovery/` with capability comparison, user perception, positioning table, and prioritized opportunity / capability / positioning gaps. If epics are written or refined, the record is updated with the plan and linked epic IDs.
+
+---
+
 #### `/backlog:dev-ready-handoff`
 
 Final pre-sprint review. Runs the dev-ready checklist, detects gaps, writes a Technical Context block, resolves open questions, and generates a sprint kickoff note. Moves the item to `ready/` and links the handoff report in the file.
@@ -451,6 +475,17 @@ Creates the Jira Epic, then creates and links all backlog items where `epic: EP-
 
 ## Recommended Workflows
 
+### Starting from market research
+```
+/backlog:market-analysis
+  → structures competitive analysis and saves to backlog/discovery/
+  → human reviews findings and decides: new epics / refine existing / save only
+  → resolves [To validate] assumptions if epics are generated
+→ /backlog:evaluate-item {ID}
+→ /backlog:dev-ready-handoff {ID}
+→ /backlog:jira-push {EPIC_ID}
+```
+
 ### Starting a new initiative
 ```
 /backlog:discovery-to-backlog
@@ -511,6 +546,7 @@ Creates the Jira Epic, then creates and links all backlog items where `epic: EP-
 | `/backlog:identify-edge-cases` | ID or Jira link | Optionally updates AC | Edge cases by category |
 | `/backlog:discovery-to-backlog` | Brief or conversational | Writes discovery record + epics + items | Full saved backlog + discovery record |
 | `/backlog:codebase-to-backlog` | Product description | Writes discovery record + epics + items | Gap-based saved backlog + discovery record |
+| `/backlog:market-analysis` | Research input or conversational | Writes discovery record; writes/refines epics after human confirms | Competitive analysis + optional epics |
 | `/backlog:dev-ready-handoff` | ID or Jira link | Writes report, moves to `ready/` | Checklist + kickoff note |
 | `/backlog:audit-items` | IDs, folder, or all | Read-only | Readiness classification |
 | `/backlog:sprint-prep` | IDs or folder | Writes reports, moves to `ready/` | Ready/Fix/Pull + kickoff |
