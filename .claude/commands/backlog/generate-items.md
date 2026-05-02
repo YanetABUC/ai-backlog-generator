@@ -43,6 +43,8 @@ Only then proceed to Step 1.
 
 If there are no `[To validate]` items, proceed to Step 1 immediately.
 
+**DoD context:** If `backlog/DoD.md` exists, read it now. Use the **Required AC Coverage** section to ensure the generated story's AC items cover each listed requirement. Use the **Required NFR Standards** section to inform the NFRs section — include only thresholds that apply to this story.
+
 ---
 
 ## Step 1: Assign ID

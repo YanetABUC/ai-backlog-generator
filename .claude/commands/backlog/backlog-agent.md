@@ -32,6 +32,7 @@ Wait for their response. Detect intent and route accordingly.
 | "Sprint planning" / "get ready for sprint" | `sprint-prep.md` | Reads folder, saves reports, moves to `ready/` |
 | "Push to Jira" / "create in Jira" | `jira-push.md` | Reads file, calls Jira API, moves to `uploaded/` |
 | "Set up Jira" / "configure Jira" | `jira-config.md` | Writes `.config.json` |
+| "Set up Definition of Done" / "configure DoD" / "update our DoD" | Read `backlog/DoD.md` if it exists; ask the user about their team standards for each section (Required AC Coverage, Required NFR Standards, Delivery Gates); write or update `backlog/DoD.md` | Writes/updates `backlog/DoD.md` |
 
 When in doubt between two routes, ask one clarifying question.
 

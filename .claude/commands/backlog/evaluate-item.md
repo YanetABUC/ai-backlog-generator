@@ -95,6 +95,12 @@ Score each dimension 1–3. Grade = round(total / 24 × 10, 1).
 
 **Top 2 fixes:** [specific and actionable]
 
+**DoD compliance:** If `backlog/DoD.md` exists, read it and check the story against:
+- **Required AC Coverage** — is each listed item covered by an AC criterion? Flag any that are missing.
+- **Required NFR Standards** — does the story include the required NFRs with correct thresholds where applicable? Flag any that are absent or use generic language instead of the specified threshold.
+
+List DoD gaps separately from the rubric score — they do not change the grade but must be resolved before handoff.
+
 ---
 
 ### Bug (BUG) — 6-Gate Rubric
