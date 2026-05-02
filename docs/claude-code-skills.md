@@ -12,6 +12,7 @@ Every epic and backlog item is saved as a markdown file with a globally unique I
 
 ```
 backlog/
+├── discovery/        ← problem statements, domain models, gap analyses, plans
 ├── epics/
 │   ├── draft/        ← generate-epics writes here
 │   └── ready/        ← dev-ready-handoff moves epics here
@@ -21,7 +22,8 @@ backlog/
 │   ├── refined/      ← (manual staging if needed)
 │   ├── ready/        ← dev-ready-handoff moves items here
 │   └── uploaded/     ← jira-push moves items here after sync
-└── reports/          ← evaluation scorecards and handoff reports
+├── reports/          ← evaluation scorecards and handoff reports
+└── DoD.md            ← team Definition of Done (optional — used by generation, evaluation, refinement, and handoff skills)
 ```
 
 ### Global ID Counter
@@ -121,7 +123,7 @@ Generates product epics from a brief, saves each to `backlog/epics/draft/`, and 
 /backlog:generate-epics
 ```
 
-**Output:** 3–5 epics saved as `EP-{N}-{slug}.md` with 10-section canonical format + optional RICE ranking.
+**Output:** 3–5 epics saved as `EP-{N}-{slug}.md` with 10-section canonical format + optional RICE ranking. After saving, the skill extracts every `[To validate]` item from Section 8 and asks the user to resolve each before story generation is offered.
 
 ---
 
@@ -147,6 +149,8 @@ Claude asks for the item type, epic ID, and type-specific context.
 - **BUG:** Summary + Steps to Reproduce + Expected vs. Actual + Severity + Fix AC + Out of Scope
 - **SPK (Spike):** Investigation Question + Context + Timebox + Expected Output + Definition of Done
 - **TSK (Task):** Description + AC + Dependencies + Out of Scope
+
+**Pre-check:** If an epic ID is referenced, the skill reads the epic and checks for any unresolved `[To validate]` assumptions. If any exist, it surfaces them as questions and waits for answers before generating. If `backlog/DoD.md` exists, it reads the Required AC Coverage and Required NFR Standards sections and uses them to shape the generated content.
 
 **Output:** Files saved as `{PREFIX}-{N}-{slug}.md` with YAML frontmatter.
 
@@ -210,7 +214,7 @@ Scores a backlog item against the appropriate quality rubric, saves the evaluati
 - **Spike:** 4 pass/fail gates (Question, Timebox, Output, DoD)
 - **Task:** 3 pass/fail gates
 
-**Output:** Scorecard per dimension + grade + top 2 specific fixes. Report saved to `backlog/reports/`. Item moved to `in-review/`.
+**Output:** Scorecard per dimension + grade + top 2 specific fixes. If `backlog/DoD.md` exists, a DoD compliance check runs after the rubric — gaps are listed separately and do not change the grade, but must be resolved before handoff. Report saved to `backlog/reports/`. Item moved to `in-review/`.
 
 ---
 
@@ -227,6 +231,8 @@ Rewrites an item to fix evaluation issues, updates the file in place. Capped at 
 ```
 /backlog:refine-item US-003 The persona is too generic and the "so that" clause is not measurable
 ```
+
+If `backlog/DoD.md` exists, the refinement ensures the rewritten story satisfies Required AC Coverage and Required NFR Standards before finishing.
 
 **Output:** Rewritten item file updated in place with fresh `updated_at` timestamp.
 
@@ -268,7 +274,7 @@ End-to-end guidance through multiple stages.
 
 Guides a PM or BA from raw discovery notes all the way to saved epics and backlog items with IDs assigned.
 
-**Stages:** Discovery Questions → Problem Framing → Epic Generation + Save → Item Generation + Save → Quality Gate
+**Stages:** Discovery Questions → Problem Framing + Save Discovery Record → Epic Generation + Save → Resolve `[To validate]` Assumptions → Item Generation + Save → Quality Gate → Update Discovery Record with Plan
 
 **Inline (skip discovery questions):**
 ```
@@ -280,7 +286,7 @@ Guides a PM or BA from raw discovery notes all the way to saved epics and backlo
 /backlog:discovery-to-backlog
 ```
 
-**Output:** Saved epics in `epics/draft/`, saved items in `backlog-items/draft/`, quality gate report.
+**Output:** Discovery record saved to `backlog/discovery/`. Saved epics in `epics/draft/`. Saved items in `backlog-items/draft/`. Quality gate report. Discovery record updated with epic IDs, work order, and what was descoped.
 
 ---
 
@@ -298,7 +304,9 @@ Analyzes an existing product description, identifies capability gaps, and genera
 /backlog:codebase-to-backlog
 ```
 
-**Output:** Domain model → gap analysis by priority → saved epics → saved items for highest-priority epic.
+**Stages:** Domain Model Extraction + Save Discovery Record → Gap Analysis + Update Record → Epic Generation + Save → Resolve `[To validate]` Assumptions → Item Generation + Save → Quality Gate → Update Discovery Record with Plan
+
+**Output:** Discovery record saved to `backlog/discovery/` (domain model, gap analysis with priorities, broken processes, suggested plan). Saved epics in `epics/draft/`. Saved items in `backlog-items/draft/`.
 
 ---
 
@@ -316,7 +324,9 @@ Final pre-sprint review. Runs the dev-ready checklist, detects gaps, writes a Te
 /backlog:dev-ready-handoff US-001 US-002 US-003
 ```
 
-**Output:** Pre-handoff checklist results + gap list + Technical Context block + open questions + kickoff note. Report saved to `backlog/reports/`. Item moved to `backlog-items/ready/`.
+The Delivery Gates checklist is read from `backlog/DoD.md` if it exists, using the team's configured standards (unit tests, QA sign-off, analytics events, feature flags). Falls back to built-in defaults if the file is absent.
+
+**Output:** Pre-handoff checklist results + DoD delivery gates + gap list + Technical Context block + open questions + kickoff note. Report saved to `backlog/reports/`. Item moved to `backlog-items/ready/`.
 
 Once in `ready/`, run `/backlog:jira-push {ID}` to create the ticket in Jira.
 
@@ -384,6 +394,10 @@ Example prompts:
 - "This story is too big — help me split it"
 - "Sprint planning is tomorrow, get my items ready"
 - "Push EP-001 and all its ready items to Jira"
+- "Set up our Definition of Done"
+- "Validate assumptions before we write stories"
+
+**Discovery context:** When generating or refining stories for an epic, the agent automatically scans `backlog/discovery/` for a matching record (matched by epic ID in the frontmatter) and uses the problem statement, gap analysis, and plan as grounding context. If found, it says so — and never asks you to re-explain what's already saved.
 
 The agent never asks you to copy-paste content that is already saved in a file.
 
@@ -440,6 +454,8 @@ Creates the Jira Epic, then creates and links all backlog items where `epic: EP-
 ### Starting a new initiative
 ```
 /backlog:discovery-to-backlog
+  → saves discovery record to backlog/discovery/
+  → resolves [To validate] assumptions before items
 → /backlog:evaluate-item {ID}    (for each generated item)
 → /backlog:refine-item {ID}      (for items below 9.0)
 → /backlog:dev-ready-handoff {ID}
@@ -449,9 +465,18 @@ Creates the Jira Epic, then creates and links all backlog items where `epic: EP-
 ### Adding to an existing product
 ```
 /backlog:codebase-to-backlog
+  → saves domain model, gap analysis, and plan to backlog/discovery/
+  → resolves [To validate] assumptions before items
 → /backlog:evaluate-item {ID}
 → /backlog:dev-ready-handoff {ID}
 → /backlog:jira-push {EPIC_ID}
+```
+
+### Setting up team standards (do once per project)
+```
+/backlog:backlog-agent → "Set up our Definition of Done"
+  → configures backlog/DoD.md with Required AC Coverage, NFR Standards, Delivery Gates
+  → used automatically by generate-items, evaluate-item, refine-item, and dev-ready-handoff
 ```
 
 ### Pre-sprint quality check
@@ -484,8 +509,8 @@ Creates the Jira Epic, then creates and links all backlog items where `epic: EP-
 | `/backlog:refine-item` | ID (+ optional feedback) | Updates item file in place | Rewritten item |
 | `/backlog:split-item` | ID | Writes new files | 2–4 split items with IDs |
 | `/backlog:identify-edge-cases` | ID or Jira link | Optionally updates AC | Edge cases by category |
-| `/backlog:discovery-to-backlog` | Brief or conversational | Writes epics + items | Full saved backlog |
-| `/backlog:codebase-to-backlog` | Product description | Writes epics + items | Gap-based saved backlog |
+| `/backlog:discovery-to-backlog` | Brief or conversational | Writes discovery record + epics + items | Full saved backlog + discovery record |
+| `/backlog:codebase-to-backlog` | Product description | Writes discovery record + epics + items | Gap-based saved backlog + discovery record |
 | `/backlog:dev-ready-handoff` | ID or Jira link | Writes report, moves to `ready/` | Checklist + kickoff note |
 | `/backlog:audit-items` | IDs, folder, or all | Read-only | Readiness classification |
 | `/backlog:sprint-prep` | IDs or folder | Writes reports, moves to `ready/` | Ready/Fix/Pull + kickoff |
