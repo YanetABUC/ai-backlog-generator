@@ -25,6 +25,7 @@ Wait for their response. Detect intent and route accordingly.
 | "Refine US-003" / "fix the issues" | `refine-item.md` | Reads file, updates in place |
 | "Split US-003" / "too big" | `split-item.md` | Reads file, writes new files |
 | "Edge cases for US-003" | `identify-edge-cases.md` | Reads file, optionally updates AC |
+| "Prototype" / "wireframes" / "Figma" / "screens" / "mockup" | `prototype-to-backlog.md` — extracts user journey, screen states, missing states, and backend requirements before generating epics and items | Saves discovery record to `backlog/discovery/`; saves epics and items with IDs |
 | "Starting from scratch" / "discovery" | `discovery-to-backlog.md` | Saves all outputs including discovery record to `backlog/discovery/` |
 | "Existing product" / "what's missing" | `codebase-to-backlog.md` | Saves all outputs including discovery record to `backlog/discovery/` |
 | "Market research" / "competitive analysis" / "compare with competitors" / "what are competitors doing" | `market-analysis.md` — structured competitive analysis with human review gate before any epic action | Saves analysis to `backlog/discovery/`; writes or refines epics only after human confirms |

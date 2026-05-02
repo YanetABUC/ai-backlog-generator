@@ -189,6 +189,7 @@ ai-backlog-generator/
 │           ├── identify-edge-cases.md
 │           ├── discovery-to-backlog.md
 │           ├── codebase-to-backlog.md
+│           ├── prototype-to-backlog.md
 │           ├── market-analysis.md
 │           ├── dev-ready-handoff.md
 │           ├── audit-items.md
@@ -223,7 +224,7 @@ ai-backlog-generator/
 │
 ├── workflows/
 │   ├── 01-discovery-to-backlog.md         ← From notes or brief → epics + items
-│   ├── 02-prototype-to-stories.md         ← From Figma or wireframe → stories
+│   ├── 02-prototype-to-backlog.md         ← From Figma or wireframe → epics + items
 │   ├── 03-codebase-to-backlog.md          ← From existing codebase → gap-based backlog
 │   ├── 04-story-evaluation.md             ← Quality review before sprint
 │   ├── 05-dev-ready-handoff.md           ← Zero-ambiguity handoff to engineering

@@ -42,7 +42,7 @@ Every item is saved as a markdown file with a globally unique ID. Items move thr
 flowchart TD
     subgraph entry["Choose your entry point"]
         WF01["/backlog:discovery-to-backlog\nDiscovery notes · product brief"]
-        WF02["Workflow 02\nPrototype · wireframes"]
+        WF02["/backlog:prototype-to-backlog\nPrototype · wireframes"]
         WF03["/backlog:codebase-to-backlog\nExisting codebase · gap analysis"]
     end
 
@@ -216,7 +216,7 @@ Reference items by their local ID or Jira link in any subsequent skill:
 | Starting point | Claude Code skill | Manual workflow |
 |---|---|---|
 | Discovery notes / product brief | `/backlog:discovery-to-backlog` | [Workflow 01](../workflows/01-discovery-to-backlog.md) |
-| Prototype or wireframes | `/backlog:generate-items` after screen analysis | [Workflow 02](../workflows/02-prototype-to-stories.md) |
+| Prototype or wireframes | `/backlog:prototype-to-backlog` | [Workflow 02](../workflows/02-prototype-to-backlog.md) |
 | Existing codebase | `/backlog:codebase-to-backlog` | [Workflow 03](../workflows/03-codebase-to-backlog.md) |
 | Competitor research / market data | `/backlog:market-analysis` | [Workflow 06](../workflows/06-market-analysis.md) |
 | Items needing review | `/backlog:audit-items` or `/backlog:evaluate-item {ID}` | [Workflow 04](../workflows/04-story-evaluation.md) |
