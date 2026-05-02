@@ -237,7 +237,7 @@ Use this before moving a story to "Ready for Sprint":
 [ ] Story can be completed in 1–3 days of focused work
 [ ] At least 2 edge cases are covered across AC and scenarios
 [ ] No undefined external dependencies
-[ ] Definition of Done is explicit
+[ ] Acceptance Criteria are explicit and verifiable — they are the story's definition of done (no separate DoD section belongs in the story file)
 [ ] An engineer unfamiliar with context could start work without a meeting
 [ ] Story is under 150 lines — no redundant narrative sections (no separate Business Objective / Problem Context / Desired Outcome)
 [ ] No Functional Requirements section — observable behaviors are expressed through AC

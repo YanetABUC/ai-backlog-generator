@@ -199,6 +199,8 @@ ai-backlog-generator/
 ├── backlog/                               ← Generated items live here (gitignored content)
 │   ├── counter.json                       ← Global ID registry
 │   ├── .config.template.json             ← Jira config template
+│   ├── DoD.md                             ← Team Definition of Done (AC coverage, NFR standards, delivery gates)
+│   ├── discovery/                         ← Problem statements, domain models, gap analyses, plans
 │   ├── epics/
 │   │   ├── draft/
 │   │   └── ready/
@@ -290,12 +292,14 @@ User Stories are scored on 8 dimensions (1–3 each, max 24). Grade = (total / 2
 
 1. **Load the agent once, work conversationally** — no prompt copy-pasting required
 2. **Validate before you write** — confirm direction before investing in item writing
-3. **Items describe what and why — never how** — no Implementation Notes, Technical Design, or Pseudocode
-4. **AC is a checklist; BDD is the proof** — they are complementary, not interchangeable
-5. **Dev-ready means no surprises** — an engineer can start without a follow-up meeting
-6. **The codebase is a product artifact** — existing code reveals constraints others miss
-7. **Evaluation is part of the process** — every item passes a quality gate before sprint
-8. **Files are the source of truth** — items are saved locally and pushed to Jira, not the other way around
+3. **Resolve assumptions before writing stories** — every `[To validate]` item in an epic must be answered before story generation begins; stories written against open assumptions require rewrites in sprint
+4. **Discovery is a persistent artifact** — problem statements, gap analyses, domain models, and plans are saved to `backlog/discovery/` and automatically reused as context in future story sessions
+5. **Items describe what and why — never how** — no Implementation Notes, Technical Design, or Pseudocode
+6. **AC is a checklist; BDD is the proof** — they are complementary, not interchangeable; neither is a Definition of Done section
+7. **Dev-ready means no surprises** — an engineer can start without a follow-up meeting
+8. **The codebase is a product artifact** — existing code reveals constraints others miss
+9. **Evaluation is part of the process** — every item passes a quality gate before sprint
+10. **Files are the source of truth** — items are saved locally and pushed to Jira, not the other way around
 
 ---
 

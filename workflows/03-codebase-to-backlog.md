@@ -164,11 +164,11 @@ These risks become technical notes in your epics and may generate separate spike
 
 ---
 
-## Step 7: Generate the Backlog
+## Step 7: Generate Epics
 
 **Prompt:**
 ```
-Based on the following analysis, generate a backlog for [feature name].
+Based on the following analysis, generate epics for [feature name]. One epic per major gap or capability cluster.
 
 Domain model: [Step 2]
 Existing capabilities: [Step 3]
@@ -176,20 +176,52 @@ Identified gaps: [Step 4]
 Business rules: [Step 5]
 Technical risks: [Step 6]
 
-Generate:
-1. Epics (one per major gap or capability cluster)
-2. User stories for each epic (5–8 per epic)
-3. Technical stories for infrastructure, data migration, or refactoring work
-4. Spike stories for areas of high uncertainty
+For each epic, use the 10-section canonical format: Narrative, Strategic Context, Desired Transformation, Scope Definition, Target Users and Actors, High-Level Functional Expectations, Non-Functional Expectations, Constraints and Assumptions, Dependencies, Success Metrics.
+
+Flag all unverified assumptions in Section 8 as [To validate].
+Do not generate user stories yet.
+```
+
+---
+
+## Step 7b: Resolve [To Validate] Assumptions
+
+**Do not generate stories until this step is complete.**
+
+Review each generated epic for items marked `[To validate]` in Section 8 (Constraints and Assumptions). These are codebase-identified constraints and assumptions that need confirmation before stories can be written accurately.
+
+For each `[To validate]` item:
+1. Confirm with engineering, the product owner, or the codebase (ask Claude Code)
+2. Update the epic with the resolved value
+3. If an assumption cannot be resolved yet, create a Spike story to investigate it before story generation
+
+Only proceed to Step 7c once every epic has no remaining `[To validate]` items.
+
+---
+
+## Step 7c: Generate Stories
+
+**Prompt:**
+```
+Based on the following validated epics and gap analysis, generate user stories for [feature name].
+
+For each epic, generate 5–8 stories covering: primary happy path, alternative flows, error states, permission variations, edge cases.
+
+Also generate:
+- Technical stories for infrastructure, data migration, or refactoring work
+- Spike stories for areas of high uncertainty identified in Step 6
 
 For each user story:
-- User story format (As a... I want... So that...)
-- 3–5 acceptance criteria in Given/When/Then format
+- Story format (In order to / As a / I want to / So that — lean canonical template)
+- Numbered acceptance criteria (pass/fail, no Given/When/Then)
 - Dependencies on existing capabilities or other stories
-- Technical notes for the engineering team (constraints from the codebase)
-- Estimated size (S/M/L)
+- Technical context for the engineering team (constraints from the codebase, in the Context paragraph)
 
 Do not re-specify capabilities that already exist. Reference them as "existing behavior."
+
+Validated epics: [paste Step 7 output with resolved assumptions]
+Domain model: [Step 2]
+Business rules: [Step 5]
 ```
 
 ---

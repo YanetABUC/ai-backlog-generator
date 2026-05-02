@@ -143,7 +143,7 @@ Before marking a story as "Ready":
 [ ] All edge cases covered in acceptance criteria
 [ ] Dependencies are listed and confirmed available
 [ ] No open questions remain (or they're tracked separately)
-[ ] Definition of Done is documented on the story
+[ ] Acceptance Criteria are clear and verifiable — they are the story's definition of done (no separate DoD section in the story file)
 [ ] Story is appropriately sized for one sprint
 ```
 

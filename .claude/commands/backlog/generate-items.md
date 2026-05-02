@@ -24,6 +24,29 @@ If no content was provided, ask:
 
 ---
 
+## Pre-Check: Epic Readiness Gate
+
+If the user referenced an epic ID, read that epic file before generating any items.
+
+Scan Section 8 (Constraints and Assumptions) for any items marked `[To validate]`.
+
+If any `[To validate]` items exist, **stop** and say:
+
+> "This epic has unresolved assumptions that need your input before user stories can be written. These affect scope and acceptance criteria — please answer each one:"
+
+Present them as a numbered list of direct questions. Wait for the user to answer all of them. Then:
+1. Update the epic file — replace each `[To validate]` entry with the resolved value
+2. Update the `updated_at` timestamp
+3. Confirm: "All assumptions resolved. Generating backlog items now."
+
+Only then proceed to Step 1.
+
+If there are no `[To validate]` items, proceed to Step 1 immediately.
+
+**DoD context:** If `backlog/DoD.md` exists, read it now. Use the **Required AC Coverage** section to ensure the generated story's AC items cover each listed requirement. Use the **Required NFR Standards** section to inform the NFRs section — include only thresholds that apply to this story.
+
+---
+
 ## Step 1: Assign ID
 
 Read `backlog/counter.json`. Compute:
@@ -103,7 +126,7 @@ Given / When / Then — confirm data preserved and user can retry
 - Design: [Figma link or TBD]
 ```
 
-Rules: no FR sections, no implementation details, no shape prescription. "So that" must be measurable. Persona must be role + context.
+Rules: no FR sections, no implementation details, no shape prescription, no Definition of Done section. "So that" must be measurable. Persona must be role + context. The AC items are the story's definition of done — do not add a separate DoD section to the file.
 
 ---
 

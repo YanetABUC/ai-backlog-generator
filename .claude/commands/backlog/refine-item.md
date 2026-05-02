@@ -42,6 +42,7 @@ Apply every rule relevant to the identified issues:
 10. NFRs must be project-specific with measurable thresholds
 11. Remove prohibited sections: Implementation Notes, Technical Design, Pseudocode, file paths, API specs
 12. Target 80–150 lines — flag if still over 200 after refinement
+13. If `backlog/DoD.md` exists, read it and verify the refined story satisfies **Required AC Coverage** (add missing AC items) and **Required NFR Standards** (add or correct any missing thresholds)
 
 ### Bug (BUG)
 

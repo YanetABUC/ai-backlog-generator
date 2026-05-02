@@ -63,6 +63,8 @@ Run and report each item:
 - [ ] All dependencies resolved or have a resolution date
 
 **Definition of Done:**
+
+If `backlog/DoD.md` exists, read the **Delivery Gates** section and use those questions as the checklist. If the file does not exist, use these defaults:
 - [ ] Unit tests expected? (yes/no)
 - [ ] Integration tests expected? (yes/no)
 - [ ] QA sign-off required? (yes/no)

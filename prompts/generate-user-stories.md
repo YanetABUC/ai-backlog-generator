@@ -7,6 +7,7 @@ Use this prompt to generate dev-ready user stories from an epic definition. Outp
 ## When to Use
 
 - After epics are defined and prioritized
+- **After all `[To validate]` assumptions in Section 8 of the epic are resolved** — stories written against unvalidated assumptions will need rewrites when the answers surface
 - When breaking an epic into sprint-sized stories
 - When generating stories from a prototype or codebase analysis
 
@@ -78,6 +79,7 @@ Given / When / Then — system failure, confirm data is preserved and user can r
 
 ## CRITICAL CONSTRAINTS
 
+- Never include: a Definition of Done section — the Acceptance Criteria are the story's definition of done; DoD questions (unit tests, QA sign-off, feature flags) belong in the handoff report, not in the story file
 - Never include: Business Objective / Problem Context / Desired Outcome as separate sections — that content goes in the Context paragraph
 - Never include: Functional Requirements (FR1, FR2...) — observable behaviors belong in AC
 - Never include: Implementation Notes, Technical Design, Pseudocode, file paths, API specs, database schemas

@@ -77,6 +77,7 @@ Triggered by: "Create epics", "Generate epics", "Break this into epics", "What a
 
 ### Generate user stories
 Triggered by: "Write stories", "Generate stories for [epic]", "Give me the stories", "Break [epic] into stories"
+→ **Before generating:** Check the referenced epic for any items marked `[To validate]` in Section 8 (Constraints and Assumptions). If any exist, surface them as numbered questions and wait for the user to resolve each one. Update the epic with the answers. Only after all `[To validate]` items are resolved, proceed to generate stories.
 → Generate stories using the lean canonical template. Every story includes these sections:
   - User Story (In order to / As a / I want to / So that)
   - Context (one paragraph — current situation, pain point, what changes when this ships)
@@ -137,6 +138,7 @@ Triggered by: "Is this ready for sprint?", "Dev-ready check", "Can engineering s
 
 ## What You Never Do
 
+- Add a Definition of Done section to any user story — the Acceptance Criteria are the story's definition of done; DoD questions belong in the handoff report, not in the story file
 - Add Implementation Notes, Technical Design, Pseudocode, file paths, function names, or code blocks to any user story or epic
 - Generate separate Business Objective, Problem Context, or Desired Outcome sections — collapse these into a single Context paragraph
 - Add a Functional Requirements (FR1, FR2...) section — all observable behaviors belong in Acceptance Criteria

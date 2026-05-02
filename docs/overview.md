@@ -76,13 +76,15 @@ flowchart TD
 
 ## Stage 1: Discovery
 
-**Goal:** Extract structured product intent from raw input.
+**Goal:** Extract structured product intent from raw input and persist it for later sessions.
 
 Raw input can be a meeting transcript, a product brief, wireframes, an existing codebase, a competitor analysis, or a support ticket cluster.
 
-AI transforms raw input into structured output: problem statement, user segments, job-to-be-done, constraints, and success metrics.
+AI transforms raw input into structured output: problem statement, user segments, job-to-be-done, constraints, and success metrics. All discovery output — problem statement, domain model, gap analysis, broken processes, and suggested plan — is saved to `backlog/discovery/` so it can be reused in future story generation sessions without re-explaining context.
 
-**Claude Code skill:** `/backlog:discovery-to-backlog` — guides through discovery questions, confirms the problem statement, generates and saves epics and backlog items with IDs.
+**Claude Code skill:** `/backlog:discovery-to-backlog` — guides through discovery questions, confirms the problem statement, saves a discovery record, generates and saves epics and backlog items with IDs.
+
+**Claude Code skill:** `/backlog:codebase-to-backlog` — maps the domain model, identifies capability gaps, saves a discovery record with the full analysis, generates epics and items for high-priority gaps.
 
 **Key document:** [Discovery → Backlog Workflow](../workflows/01-discovery-to-backlog.md)
 
@@ -109,6 +111,10 @@ AI accelerates this by generating validation questions, identifying assumption g
 **Goal:** Produce structured epics and backlog items with IDs, saved to the local pipeline.
 
 With validated context, AI generates items appropriate to the work type — user stories for new capabilities, bugs for defects, spikes for investigations, tasks for technical prerequisites. All items are saved to `backlog/backlog-items/draft/` with a globally unique ID and YAML frontmatter tracking their status and Jira key.
+
+**Assumption gate:** After generating epics, every item marked `[To validate]` in Section 8 (Constraints and Assumptions) must be resolved before story generation begins. Stories written against unvalidated assumptions require rewrites when the answers surface — in sprint. The skills enforce this gate automatically.
+
+**Team standards:** If `backlog/DoD.md` exists, story generation uses its **Required AC Coverage** and **Required NFR Standards** sections to shape the generated AC and NFRs. Run `/backlog:backlog-agent` and say "set up our Definition of Done" to configure it.
 
 **Claude Code skills:**
 - `/backlog:generate-epics` — epics saved to `backlog/epics/draft/`
@@ -166,7 +172,9 @@ Dev-ready means an engineer can pick up the item and start building without sche
 - Dependencies identified and linked
 - Technical constraints documented
 - AC covers happy path + error states + edge cases
-- Definition of Done is explicit
+- Delivery gates answered (tests expected, QA sign-off, analytics events, feature flags)
+
+The **Delivery Gates** checklist is read from `backlog/DoD.md` if it exists, giving teams a consistent standard across all items. If the file does not exist, the skill uses built-in defaults.
 
 The handoff report is saved to `backlog/reports/` and linked in the item's frontmatter. The item moves to `backlog/backlog-items/ready/`.
 
@@ -222,6 +230,7 @@ All items are tracked in `backlog/counter.json` — a global registry that maps 
 
 ```
 backlog/
+├── discovery/        ← problem statements, gap analyses, domain models, plans
 ├── epics/
 │   ├── draft/        ← generate-epics writes here
 │   └── ready/        ← dev-ready-handoff moves epics here
@@ -231,7 +240,8 @@ backlog/
 │   ├── refined/      ← optional manual staging
 │   ├── ready/        ← dev-ready-handoff moves items here
 │   └── uploaded/     ← jira-push moves items after sync
-└── reports/          ← evaluation and handoff reports
+├── reports/          ← evaluation and handoff reports
+└── DoD.md            ← team Definition of Done (AC coverage, NFR standards, delivery gates)
 ```
 
 Every item file uses YAML frontmatter to track its lifecycle:
