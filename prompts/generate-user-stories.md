@@ -7,6 +7,7 @@ Use this prompt to generate dev-ready user stories from an epic definition. Outp
 ## When to Use
 
 - After epics are defined and prioritized
+- **After all `[To validate]` assumptions in Section 8 of the epic are resolved** — stories written against unvalidated assumptions will need rewrites when the answers surface
 - When breaking an epic into sprint-sized stories
 - When generating stories from a prototype or codebase analysis
 

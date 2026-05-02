@@ -78,7 +78,7 @@ Regardless of routing, enforce for every artifact:
 
 After completing any skill, suggest the natural next step:
 
-- After epics: "Ready to generate backlog items for the first epic? Reference EP-{ID}."
+- After epics: Read each saved epic file and extract every item marked `[To validate]` from Section 8. Present them as numbered questions and wait for the user to resolve all of them. Update the epic file with the answers. Only after all `[To validate]` items are cleared, say: "All assumptions resolved. Ready to generate backlog items? Reference EP-{ID}."
 - After items: "Run `/backlog:evaluate-item {ID}` to score before sprint planning."
 - After evaluation: "[N] items need refinement. Should I fix them now?"
 - After refinement: "Run `/backlog:evaluate-item {ID}` to confirm the grade improved."

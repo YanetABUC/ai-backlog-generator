@@ -273,4 +273,5 @@ Product vision:
 - Include user research data in the prompt ("our top support request is X" → becomes Strategic Context)
 - Name the constraints explicitly — AI will scope epics more realistically
 - For multi-epic initiatives, generate all epics first, then RICE-score before generating stories
+- **Before generating user stories, resolve every `[To validate]` assumption in Section 8 of each epic.** Each unresolved assumption affects story scope and acceptance criteria. Stories written against unvalidated assumptions may need full rewrites after the answer surfaces.
 - If you get epics that are too technical, add: "Express all scope as user-facing capabilities and behavioral changes — no technical implementation details"

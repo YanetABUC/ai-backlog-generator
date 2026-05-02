@@ -67,6 +67,29 @@ For High-priority gaps, generate epics following `generate-epics.md`:
 
 ---
 
+## Stage 3b: Resolve Open Assumptions
+
+**Do not proceed to backlog items until this stage is complete.**
+
+For each epic saved in Stage 3:
+1. Read the saved epic file
+2. Extract every item marked `[To validate]` from Section 8 (Constraints and Assumptions)
+
+If any `[To validate]` items exist, present them as a numbered list of direct questions:
+
+> "Before we write user stories, I need your input on the open assumptions in this epic. These affect scope and story design — please answer each one:"
+
+Wait for the user to answer all questions. Then:
+1. Update the epic file — replace each `[To validate]` entry with the resolved value
+2. Update the `updated_at` timestamp
+3. Confirm: "All assumptions resolved. The epic is ready for story generation."
+
+If there are no `[To validate]` items in an epic, skip it and move on.
+
+Only after every epic has no remaining `[To validate]` items, proceed to Stage 4.
+
+---
+
 ## Stage 4: Backlog Item Generation and Save
 
 For the highest-priority epic, generate 5–8 backlog items following `generate-items.md`:

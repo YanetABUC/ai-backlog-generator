@@ -125,6 +125,21 @@ Use the RICE ranking to decide which epics to generate stories for first.
 
 ---
 
+## Step 5b: Resolve [To Validate] Assumptions
+
+**Do not generate stories until this step is complete.**
+
+Review each epic for items marked `[To validate]` in Section 8 (Constraints and Assumptions). Each one represents a decision that affects story scope, acceptance criteria, or feasibility.
+
+For each `[To validate]` item:
+1. Answer it now if you have the information
+2. If not, write it on your open questions list and get the answer before proceeding
+3. Update the epic with the resolved value
+
+A `[To validate]` item left open means the stories written against it may need to be rewritten after the answer surfaces — in sprint. Resolve them now.
+
+---
+
 ## Step 6: Generate User Stories
 
 For each prioritized epic, generate stories:

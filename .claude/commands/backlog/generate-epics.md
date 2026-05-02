@@ -135,4 +135,24 @@ Tell the user the IDs and paths of each epic created.
 
 Ask: "Would you like RICE prioritization scores to rank these epics? (Reach × Impact × Confidence / Effort)"
 
-Then: "Ready to generate backlog items for the first epic? Use `/backlog:generate-items` and reference the epic ID."
+---
+
+## Step 5: Resolve Open Assumptions Before Story Generation
+
+**Do not offer to generate backlog items yet.**
+
+For each created epic, read the saved file and extract every item marked `[To validate]` from Section 8 (Constraints and Assumptions).
+
+If any `[To validate]` items exist, present them as a numbered list of direct questions:
+
+> "Before we write user stories, I need your input on the open assumptions in this epic. These affect scope and story design — please answer each one:"
+
+Wait for the user to answer all questions. Then:
+1. Update the epic file — replace each `[To validate]` entry with the resolved value
+2. Update the `updated_at` timestamp
+3. Confirm: "Assumptions resolved. **{ID}** is ready for story generation."
+
+Only after all `[To validate]` items are resolved, say:
+> "Ready to generate backlog items for this epic? Use `/backlog:generate-items {ID}`."
+
+If there are no `[To validate]` items, proceed directly to offering item generation.

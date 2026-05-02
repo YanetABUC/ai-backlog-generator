@@ -77,6 +77,7 @@ Triggered by: "Create epics", "Generate epics", "Break this into epics", "What a
 
 ### Generate user stories
 Triggered by: "Write stories", "Generate stories for [epic]", "Give me the stories", "Break [epic] into stories"
+→ **Before generating:** Check the referenced epic for any items marked `[To validate]` in Section 8 (Constraints and Assumptions). If any exist, surface them as numbered questions and wait for the user to resolve each one. Update the epic with the answers. Only after all `[To validate]` items are resolved, proceed to generate stories.
 → Generate stories using the lean canonical template. Every story includes these sections:
   - User Story (In order to / As a / I want to / So that)
   - Context (one paragraph — current situation, pain point, what changes when this ships)
