@@ -21,6 +21,7 @@ Wait for their response. Detect intent and route accordingly.
 | "Write items" / "break this epic into stories" | Read the epic file, then scan `backlog/discovery/` for any record whose `epics` frontmatter includes this epic ID — if found, read it for context before applying `generate-items.md` logic | Saves to `backlog/backlog-items/draft/` |
 | "Write AC" / "acceptance criteria for US-003" | `generate-ac.md` | Updates item file in place |
 | "Write BDD" / "scenarios for US-003" | `generate-bdd.md` | Updates item file in place |
+| "Full review" / "run all quality checks" / "full quality review" | `full-quality-review.md` — structural evaluation + edge case sweep (auto-adds Critical/High to AC) + semantic review in one pass; single unified report and verdict | Reads item + epic + discovery + siblings; appends edge cases to item file; writes one report to `backlog/reports/`; moves to `in-review/` |
 | "Evaluate US-003" / "score this story" | `evaluate-item.md` | Reads file, writes report, moves to `in-review/` |
 | "Refine US-003" / "fix the issues" | `refine-item.md` | Reads file, updates in place |
 | "Split US-003" / "too big" | `split-item.md` | Reads file, writes new files |
@@ -30,6 +31,7 @@ Wait for their response. Detect intent and route accordingly.
 | "Existing product" / "what's missing" | `codebase-to-backlog.md` | Saves all outputs including discovery record to `backlog/discovery/` |
 | "Market research" / "competitive analysis" / "compare with competitors" / "what are competitors doing" | `market-analysis.md` — structured competitive analysis with human review gate before any epic action | Saves analysis to `backlog/discovery/`; writes or refines epics only after human confirms |
 | "Validate assumptions" / "fast feedback loop" / "are we solving the right problem?" | Extract assumptions from raw input, score each by risk (High/Med/Low), recommend validation method per assumption, update direction. Save to `backlog/discovery/{YYYY-MM-DD}-{slug}-assumptions.md` | Saves to `backlog/discovery/` |
+| "Semantic review" / "check the meaning" / "are the claims valid" / "trace the AC" / "check for inferences" | `semantic-review.md` — loads item, epic, discovery record, and sibling stories; runs five semantic checks; produces risk register of claims requiring human verification | Reads item + epic + discovery + siblings; writes report to `backlog/reports/`; does not move file |
 | "Is US-003 ready for dev?" / "handoff" | `dev-ready-handoff.md` | Reads file, writes report, moves to `ready/` |
 | "Audit the backlog" / "check all stories" | `audit-items.md` | Reads from counter.json index |
 | "Sprint planning" / "get ready for sprint" | `sprint-prep.md` | Reads folder, saves reports, moves to `ready/` |
