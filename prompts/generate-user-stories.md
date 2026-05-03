@@ -129,7 +129,7 @@ For each screen or user interaction:
 - Link the Figma frame in the Media section
 
 Screen analysis:
-[paste output from Workflow 02, Steps 2–4]
+[paste output from Workflow 02, Steps 2–4 — see 02-prototype-to-backlog.md]
 ```
 
 ---
