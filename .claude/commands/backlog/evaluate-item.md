@@ -167,7 +167,8 @@ Update the item's frontmatter:
 
 Tell the user the grade and status, then route:
 
-- **≥ 9.0 (User Story):** "Ready to proceed. Run `/backlog:dev-ready-handoff {ID}` for the final pre-sprint check."
+- **≥ 9.0 (User Story):** "Structural quality passes. Run `/backlog:semantic-review {ID}` to check claim traceability, goal-AC alignment, and inferences before handoff."
+- **7.0–8.9 (User Story after reaching ≥9.0 on re-eval):** "Structural quality passes. Run `/backlog:semantic-review {ID}` before handoff."
 - **7.0–8.9:** "Run `/backlog:refine-item {ID}` — paste the evaluation feedback when prompted."
 - **< 7.0:** "Requires rework. Return to `/backlog:generate-items` with richer context — this is a context problem, not a wording problem. Cap: do not refine a story more than twice."
 - **Bug/Spike/Task pass:** "Run `/backlog:dev-ready-handoff {ID}`."

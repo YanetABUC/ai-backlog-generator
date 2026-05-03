@@ -218,6 +218,61 @@ Dependencies:
 
 ---
 
+---
+
+## Semantic Quality: The Layer Structural Evaluation Misses
+
+The eight dimensions above evaluate **form**. A story can score 9.0 on the rubric and still be wrong — because structural evaluation checks whether the story is well-formed, not whether its content is logically sound and traceable to validated requirements.
+
+The most dangerous quality failures are semantic. They arrive formatted correctly, pass every gate, and reach engineering carrying a false premise.
+
+### What structural evaluation cannot catch
+
+**Untraceable claims in AC**
+An Acceptance Criteria item introduces a behavioral rule that was never stated in discovery, never listed in the epic, and never validated as an assumption. It was inferred during writing. It may be plausible — it may even be correct — but it has no source. If it's wrong, it causes a rework cycle after implementation.
+
+Example:
+> "Approved suggestions are sorted by vendor name by default."
+No discovery record states a sorting preference. No stakeholder validated this. It was invented during story generation and looks completely reasonable.
+
+**Goal-AC misalignment (sufficiency failure)**
+The "so that" clause states the user goal. The AC define conditions for done. These two things can be written independently — and often are. A story fails sufficiency when all ACs could pass but the user goal would still not be achieved. This is the most dangerous failure type: the story ships, QA signs off, and no value is delivered.
+
+**BDD-AC disconnection**
+BDD scenarios and AC are often generated in separate passes. The result: scenarios that test behavior not stated in any AC (orphaned scenarios testing out-of-scope things), and AC items with no corresponding BDD scenario (conditions required but never tested). Both slip through every structural gate.
+
+**Cross-story contradictions**
+Two stories in the same epic state conflicting behavioral rules — approval thresholds, permission levels, data visibility scopes. Each story looks correct in isolation. Together they send engineering in opposite directions. No per-item evaluation catches this.
+
+**Inferences stated as facts**
+During writing, behavioral preferences ("users will want to see this sorted"), outcome predictions ("this will reduce support tickets"), and default-state inventions ("if empty, show a prompt") get embedded as requirements. They are stated as facts but are deductions. If they are wrong, the story is wrong — regardless of its structural score.
+
+### The semantic review layer
+
+`/backlog:semantic-review` runs five checks against the item, its parent epic, the discovery record, and all sibling stories in the same epic:
+
+| Check | What it finds |
+|---|---|
+| Claim Traceability | AC items with no source in discovery, the epic, or validated assumptions |
+| Goal-AC Alignment | AC sets that are unnecessary (scope creep) or insufficient (goal not achieved) |
+| BDD-AC Alignment | Orphaned BDD scenarios and untested AC items |
+| Cross-Story Consistency | Contradictions in rules, thresholds, and term definitions across siblings |
+| Inference Audit | Claims stated as requirements that are actually unvalidated deductions |
+
+Output is a **risk register** — not a score. Each finding includes the exact claim, why it is risky, and the question a PM or domain expert must answer to resolve it. The skill surfaces the questions; humans answer them.
+
+### Where semantic review fits in the pipeline
+
+```
+Structural Evaluation (evaluate-item) → Semantic Review (semantic-review) → Dev-Ready Handoff (dev-ready-handoff)
+```
+
+Run semantic review on stories that scored ≥ 7.0 on the structural rubric. Stories below that threshold have form problems that should be fixed first — semantic review assumes a well-formed story.
+
+See [workflow 07: semantic review](../workflows/07-semantic-review.md) and the [semantic review prompt](../prompts/semantic-review.md).
+
+---
+
 ## Quick Quality Checklist
 
 Use this before moving a story to "Ready for Sprint":
