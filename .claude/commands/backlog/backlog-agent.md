@@ -36,6 +36,7 @@ Wait for their response. Detect intent and route accordingly.
 | "Audit the backlog" / "check all stories" | `audit-items.md` | Reads from counter.json index |
 | "Sprint planning" / "get ready for sprint" | `sprint-prep.md` | Reads folder, saves reports, moves to `ready/` |
 | "Push to Jira" / "create in Jira" | `jira-push.md` | Reads file, calls Jira API, moves to `uploaded/` |
+| "Pull from Jira" / "import from Jira" / "sync from Jira" / "import PROJ-42" / "pull current sprint" | `jira-pull.md` — fetches one issue, a list, a sprint, or a JQL result; runs conflict detection; converts and saves to `draft/`; queues for quality review | Writes to `backlog-items/draft/` or `epics/draft/`; updates `counter.json` |
 | "Set up Jira" / "configure Jira" | `jira-config.md` | Writes `.config.json` |
 | "Set up Definition of Done" / "configure DoD" / "update our DoD" | Read `backlog/DoD.md` if it exists; ask the user about their team standards for each section (Required AC Coverage, Required NFR Standards, Delivery Gates); write or update `backlog/DoD.md` | Writes/updates `backlog/DoD.md` |
 
